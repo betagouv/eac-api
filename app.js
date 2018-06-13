@@ -9,12 +9,21 @@ const router = new Router()
 
 mongoose.connect('mongodb://localhost/eac')
 
+function apiRender(context, body) {
+  context.set('Content-Type', 'application/json')
+  context.set('Access-Control-Allow-Origin', '*')
+  context.body = JSON.stringify(body)
+}
+
 router.get('/actors', async ctx => {
   const actors = await Actor.find().limit(10)
-  ctx.set('Content-Type', 'application/json')
-  debugger
-  ctx.body = JSON.stringify(actors)
+  apiRender(ctx, actors)
+})
+
+router.get('/actors/:id', async ctx => {
+  const actor = await Actor.findOne({_id: ctx.params.id})
+  apiRender(ctx, actor)
 })
 
 app.use(router.routes())
-app.listen(4000)
+app.listen(3000)
