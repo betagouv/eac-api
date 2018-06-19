@@ -4,7 +4,7 @@
   "description": "API for EAC project",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "DEBUG=koa* nodemon --inspect app.js",
     "debug": "nodemon inspect app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

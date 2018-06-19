@@ -7,7 +7,7 @@ const Actor = require('./models/actor')
 const app = new Koa()
 const router = new Router()
 
-mongoose.connect('mongodb://localhost/eac')
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/eac')
 
 function apiRender(context, body) {
   context.set('Content-Type', 'application/json')
@@ -16,12 +16,14 @@ function apiRender(context, body) {
 }
 
 router.get('/actors', async ctx => {
-  const actors = await Actor.find().limit(1000)
+  const actors = await Actor.find().limit(100)
   apiRender(ctx, actors)
 })
 
 router.get('/actors/search/:q', async ctx => {
-  const actors = await Actor.find({name: {$contains: q}}).limit(1000)
+  // Perform a _logical AND_ search
+  const query = ctx.params.q.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
+  const actors = await Actor.find({$text: {$search: query}}).limit(100)
   apiRender(ctx, actors)
 })
 
