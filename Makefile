@@ -1,5 +1,6 @@
 csv_to_mongo:  # password="mongo_password" file="my_file.csv"
-	mongoimport -p=$(password) --uri=mongo://ds263740.mlab.com:63740/heroku_rskk4b5m -c actors --type csv --headerline --file $(file)
+	mongo -u eac -p --eval "db.actors.remove({})" mongodb://eac:${password}@ds263740.mlab.com:63740/heroku_rskk4b5m
+	mongoimport --uri=mongodb://eac:${password}@ds263740.mlab.com:63740/heroku_rskk4b5m -c actors --type csv --headerline --file $(file)
 
 fix_csv:
 	perl -pi -e 's/,adresse,/,address,/' $(file)
