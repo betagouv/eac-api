@@ -16,7 +16,12 @@ function apiRender(context, body) {
 }
 
 router.get('/actors', async ctx => {
-  const actors = await Actor.find().limit(10)
+  const actors = await Actor.find().limit(1000)
+  apiRender(ctx, actors)
+})
+
+router.get('/actors/search/:q', async ctx => {
+  const actors = await Actor.find({name: {$contains: q}}).limit(1000)
   apiRender(ctx, actors)
 })
 
