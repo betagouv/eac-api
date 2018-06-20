@@ -7,7 +7,7 @@ const Actor = require('./models/actor')
 const app = new Koa()
 const router = new Router()
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/eac')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/eac')
 
 function apiRender(context, body) {
   context.set('Content-Type', 'application/json')
