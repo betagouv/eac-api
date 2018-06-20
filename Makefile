@@ -19,13 +19,3 @@ fix_csv:
 	perl -pi -e 's/,"?coordonnees_finales"?,/,latLng,/ if 1' $(file)
 	perl -pi -e 's/,"?code_Insee"?,/,inseeCode,/ if 1' $(file)
 	perl -pi -e 's/,"?Domaine"?/,domain/ if 1' $(file)
-	## Replacing non-UTF8 chars (can't make it work though)
-	# perl -pi -e 's/Ã©/é/g' $(file)
-	# perl -pi -e 's/Ãª/ê/g' $(file)
-	# perl -pi -e 's/Ã¢/â/g' $(file)
-	# perl -pi -e 's/Ã´/ô/g' $(file)
-	# perl -pi -e 's/Ã¨/è/g' $(file)
-	# perl -pi -e 's/Âœ/œ/g' $(file)
-	# perl -pi -e 's/Ã‰/É/g' $(file)
-	# perl -pi -e 's/Ã§/ç/g' $(file)
-	# perl -pi -e 's/Ã /à/g' $(file) # keep me last
