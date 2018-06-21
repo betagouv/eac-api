@@ -22,8 +22,11 @@ router.get('/actors', async ctx => {
 
 router.get('/actors/search/:q', async ctx => {
   // Perform a _logical AND_ search
-  const query = ctx.params.q.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
-  const actors = await Actor.find({$text: {$search: query}}).limit(100)
+  const words = ctx.params.q.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
+  const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
+  const criteria = {$text: {$search: words}}
+  if(domains) criteria.domains = {$in: domains}
+  const actors = await Actor.find(criteria).limit(100)
   apiRender(ctx, actors)
 })
 
