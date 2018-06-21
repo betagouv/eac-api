@@ -31,6 +31,13 @@ router.get('/actors/:id', async ctx => {
   const actor = await Actor.findOne({_id: ctx.params.id})
   apiRender(ctx, actor)
 })
+router.get('/domains', async ctx => {
+  const domains = await Actor.distinct('domains')
+  const cleanedDomains = domains
+    .filter(d => String(d) === d)
+    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+  apiRender(ctx, cleanedDomains)
+})
 
 app.use(router.routes())
 app.listen(process.env.PORT || 3000)

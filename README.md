@@ -31,6 +31,7 @@ one expected in the app
 - `make csv_to_mongo file=path/to/your/file.csv` will prompt for the password
 and import the CSV file into the MongoDB.
 
+One you have imported your CSV into the database, you should run migrations
 
 ### Troubleshooting
 
@@ -45,3 +46,15 @@ and try again.
 Your CSV should enforce quoted text before injecting into MongoDB.
 Save your CSV again checking the option for quoting all texts
 (the option is called "quote all text cells" in LibreOffice).
+
+
+## Running migrations
+
+Importing the MongoDB from CSV generates raw data.
+You should therefore apply some transformations through migrations:
+
+```
+mongo eac migrations
+```
+
+This task will apply migrations in the eac dababase of you localhost.
