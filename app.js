@@ -23,9 +23,15 @@ router.get('/actors', async ctx => {
 router.get('/actors/search/:q', async ctx => {
   // Perform a _logical AND_ search
   const words = ctx.params.q.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
+  const criteria = { $text: { $search: words } }
+  // Filter with certain domains
   const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
-  const criteria = {$text: {$search: words}}
   if(domains) criteria.domains = {$in: domains}
+  // Search within 100km
+  const from = ctx.request.query.from
+  if(from) criteria.loc = { $geoWithin: { $centerSphere: [from.split(',').map(v => Number(v)),
+                                                          100 / 3963.2 ]
+                          } }
   const actors = await Actor.find(criteria).limit(100)
   apiRender(ctx, actors)
 })
