@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const ActorSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
-  loc: { type: Object, index: '2dsphere' }
+  loc: { type: Object, index: '2dsphere' },
+  distance: Number,
 })
 
 class Actor {}
