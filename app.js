@@ -1,7 +1,6 @@
 const Koa = require('koa')
 const Router = require('koa-router')
 const mongoose = require('mongoose')
-const utils = require('./utils')
 
 const Actor = require('./models/actor')
 
@@ -29,14 +28,14 @@ router.get('/actors/search/:q', async ctx => {
   const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
   if(domains) criteria.domains = {$in: domains}
   // Search within 100km
-  const fromString = ctx.request.query.from
+  const from = ctx.request.query.from
   let actors
-  if(fromString) {
-    const location = fromString.split(',').map(v => Number(v))
+  if(from) {
+    const location = from.split(',').map(v => Number(v))
     criteria.loc = { $geoWithin: { $centerSphere: [location, 100 / 3963.2 ]} }
     actors = await Actor.find(criteria).limit(100)
     // Calculate the distance and sort
-    actors.forEach(actor => actor.distance = utils.distance(location, actor.loc.coordinates))
+    actors.forEach(actor => actor.location = location)
     actors.sort((a, b) => a.distance > b.distance)
   }
   else {
@@ -47,6 +46,7 @@ router.get('/actors/search/:q', async ctx => {
 
 router.get('/actors/:id', async ctx => {
   const actor = await Actor.findOne({_id: ctx.params.id})
+  actor.location = ctx.request.query.from
   apiRender(ctx, actor)
 })
 router.get('/domains', async ctx => {

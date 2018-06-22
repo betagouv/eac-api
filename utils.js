@@ -1,4 +1,4 @@
-function distance(latlng1, latlng2) {
+function distance(latlng1 = [], latlng2 = []) {
   const [lat1, lng1] = latlng1
   const [lat2, lng2] = latlng2
   const R = 6371 // Radius of the earth in km
