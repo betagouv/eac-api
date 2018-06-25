@@ -49,6 +49,7 @@ router.get('/actors/:id', async ctx => {
   actor.location = ctx.request.query.from
   apiRender(ctx, actor)
 })
+
 router.get('/domains', async ctx => {
   const domains = await Actor.distinct('domains')
   const cleanedDomains = domains
