@@ -3,6 +3,7 @@ const Router = require('koa-router')
 const mongoose = require('mongoose')
 
 const Actor = require('./models/actor')
+const School = require('./models/school')
 
 const app = new Koa()
 const router = new Router()
@@ -56,6 +57,14 @@ router.get('/domains', async ctx => {
     .filter(d => String(d) === d)
     .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
   apiRender(ctx, cleanedDomains)
+})
+
+router.get('/schools/search/:q', async ctx => {
+  // Perform a _logical AND_ search
+  const words = ctx.params.q.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
+  let schools = await School.find({ $text: { $search: words } }).limit(20)
+  schools = schools.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  apiRender(ctx, schools)
 })
 
 app.use(router.routes())
