@@ -1,9 +1,9 @@
 print('Extracting Domains.')
-db.actors.find({domain: {$exists: true}}).forEach(actor => {
+db.actors.find({domain: {$exists: true, $nin: ['', null]}}).forEach(actor => {
   actor.domains = actor.domain.length && actor.domain.split(',').map(a => a.trim())
   delete actor.domain
   db.actors.update({_id: actor._id}, actor)
-})
+}).batch_size(5000)
 
 print('Extracting "adresse.data.gouv.fr" latLng to geoJSON.')
 db.actors.find({latitude: {$nin: ['', null]}}).forEach(actor => {
@@ -11,7 +11,7 @@ db.actors.find({latitude: {$nin: ['', null]}}).forEach(actor => {
   delete actor.latitude
   delete actor.longitude
   db.actors.update({_id: actor._id}, actor)
-})
+}).batch_size(5000)
 
 print('Extracting native latLnt to geoJSON.')
 db.actors.find({latLng: {$nin: ['', null]}}).forEach(actor => {
@@ -20,4 +20,4 @@ db.actors.find({latLng: {$nin: ['', null]}}).forEach(actor => {
   delete actor.latLng
   actor.loc = {type: 'Point', coordinates: coordinates}
   db.actors.update({_id: actor._id}, actor)
-})
+}).batch_size(5000)

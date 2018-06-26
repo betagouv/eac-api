@@ -1,5 +1,5 @@
 MONGO_URI=mongodb://eac:$(password)@ds263660.mlab.com:63660/heroku_5pvx16b8
-MONGO_URI=mongodb://localhost:27017/eac
+# MONGO_URI=mongodb://localhost:27017/eac
 
 
 fix_csv:  # file="my_file.csv"
