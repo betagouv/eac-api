@@ -67,5 +67,10 @@ router.get('/schools/search/:q', async ctx => {
   apiRender(ctx, schools)
 })
 
+router.get('/schools/:id', async ctx => {
+  const school = await School.findOne({_id: ctx.params.id})
+  apiRender(ctx, school)
+})
+
 app.use(router.routes())
 app.listen(process.env.PORT || 3000)
