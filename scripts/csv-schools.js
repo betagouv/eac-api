@@ -28,8 +28,7 @@ async function parse() {
   )
 
   const normalizedRows = rows.map(r => {
-    const row = { ...r
-    }
+    const row = { ...r}
     if (r.coordonnee_x && r.coordonnee_y) {
       const x = parseFloat(r.coordonnee_x.replace(/,/g, '.'))
       const y = parseFloat(r.coordonnee_y.replace(/,/g, '.'))
@@ -37,7 +36,7 @@ async function parse() {
         name: row.appellation_officielle,
         postalCode: row.code_postal_uai,
         city: row.localite_acheminement_uai,
-        position: {
+        loc: {
           type: 'Point',
           coordinates: unproj.forward([x, y])
         }
