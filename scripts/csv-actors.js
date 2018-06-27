@@ -2,6 +2,13 @@ const getStream = require('get-stream').array
 const csvParse = require('csv-parser')
 const fs = require('fs')
 
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 async function parse () {
   const rows = await getStream(
     fs.createReadStream('/Users/raphael/Downloads/liste_acteurs_culturels__2.csv')
@@ -11,6 +18,7 @@ async function parse () {
   const normalizedRows = rows.map(r => {
     const row = { ...r}
     return {
+      id: uuidv4(),
       name: row.name,
       description: row.description,
       dep: row.dep,
@@ -37,7 +45,7 @@ async function parse () {
     }
   }).filter(x => x)
 
-  console.log(JSON.stringify(normalizedRows.filter(x => x.loc)))
+  console.log(JSON.stringify(normalizedRows))
 }
 
 function parseDomain (domains) {

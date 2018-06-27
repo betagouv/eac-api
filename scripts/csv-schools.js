@@ -29,7 +29,7 @@ async function parse() {
 
   const normalizedRows = rows.map(r => {
     const row = { ...r}
-    if (r.coordonnee_x && r.coordonnee_y) {
+    if (r.coordonnee_x && r.coordonnee_y && r.appellation_officielle) {
       const x = parseFloat(r.coordonnee_x.replace(/,/g, '.'))
       const y = parseFloat(r.coordonnee_y.replace(/,/g, '.'))
       return {
