@@ -1,5 +1,5 @@
 const getStream = require('get-stream').array
-const csvParse = require('csv-parser')
+const csvParse = require('csv-parse')
 const fs = require('fs')
 
 function uuidv4() {
@@ -11,8 +11,8 @@ function uuidv4() {
 
 async function parse () {
   const rows = await getStream(
-    fs.createReadStream('/Users/raphael/Downloads/liste_acteurs_culturels__2.csv')
-      .pipe(csvParse())
+    fs.createReadStream('/Users/raphael/Downloads/liste.csv')
+      .pipe(csvParse({skip_lines_with_error: true, columns: true}))
   )
 
   const normalizedRows = rows.map(r => {
@@ -37,7 +37,7 @@ async function parse () {
       banLatLng: row.geo_ban,
       inseeLatLng: row.geo_insee,
       inseeCode: row.code_Insee,
-      domain: parseDomain(row.Domaine),
+      domains: parseDomain(row.Domaine),
       loc: row.coordonnees_finales && row.coordonnees_finales.split && {
         type: 'Point',
         coordinates: row.coordonnees_finales.split(',').map(v => Number(v.trim()))

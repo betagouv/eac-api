@@ -10,7 +10,6 @@ async function itemsToCsv(items) {
 
 async function parse() {
   let rows = require('../result.json')
-  // console.log(rows[0])
   rows = rows.filter(x => !x.loc)
     .filter(x => `${x.address},${x.city},${x.postalCode}`.length < 190)
     .map(x => {

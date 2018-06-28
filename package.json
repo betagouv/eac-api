@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "addok-geocode-stream": "^0.1.0",
+    "csv-parse": "^2.5.0",
     "csv-parser": "^1.12.1",
     "csv-write-stream": "^2.0.0",
     "epsg-index": "^0.14.0",

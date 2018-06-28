@@ -17,8 +17,11 @@ async function parse() {
       if (geoRow) {
         row.loc = {
           type: 'Point',
-          coordinates: [geoRow.latitude, geoRow.longitude]
+          coordinates: [parseFloat(geoRow.latitude), parseFloat(geoRow.longitude)]
         }
+      }
+      if (row.loc && (!row.loc.coordinates || !row.loc.coordinates[0])) {
+        delete row.loc
       }
     }
     return row
