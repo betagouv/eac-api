@@ -53,7 +53,7 @@ function parseDomain (domains) {
   domains.split(',')
     .map(a => a.trim())
     .map(a => a.replace(/�/, 'é'))
-    .map(a => a.replace(/^[Tt]h..tre$/, 'é'))
+    .map(a => a.replace(/^[Tt]h..tre$/, 'Théâtre'))
     .map(a => a.charAt(0).toUpperCase() + a.slice(1))
 }
 
