@@ -9,7 +9,7 @@ async function itemsToCsv(items) {
 }
 
 async function parse() {
-  let rows = require('../result.json')
+  let rows = require(`${__dirname}/../actors.json`)
   rows = rows.filter(x => !x.loc)
     .filter(x => `${x.address},${x.city},${x.postalCode}`.length < 190)
     .map(x => {

@@ -1,9 +1,3 @@
-// Installation:
-// > npm install get-stream csv-parser proj4 iconv-lite request
-//
-// Usage:
-// > node csv-schools.js > result.json
-// > mongoimport --uri=mongodb://localhost:27017/eac -c schools2 --jsonArray --file result.json
 const getStream = require('get-stream').array
 const csvParse = require('csv-parser')
 const proj4 = require('proj4')

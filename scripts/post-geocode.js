@@ -3,12 +3,12 @@ const getStream = require('get-stream').array
 const csvParse = require('csv-parser')
 
 async function parse() {
-  let geoRows = await getStream(
-    fs.createReadStream('./result.geocoded.csv')
+  const geoRows = await getStream(
+    fs.createReadStream('./addresses.geocoded.csv')
       .pipe(csvParse())
   )
 
-  let rows = require(__dirname + '/../result.json')
+  let rows = require(`${__dirname}/../actors.json`)
   rows = rows.map(row => {
     if (!row.loc || !row.loc.coordinates) {
       const geoRow = geoRows.find(gr => {

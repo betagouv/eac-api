@@ -3,21 +3,21 @@
 
 process_schools:
 	@echo "Process schools  $(MONGO_URI)"
-	node scripts/csv-schools.js > result.json
-	mongo -p --eval "db.schools.remove({})" $(MONGO_URI)
-	mongoimport --uri=$(MONGO_URI) -c schools --jsonArray --file result.json
-	rm result.json
+	node scripts/csv-schools.js > schools.json
+	mongo --eval "db.schools.remove({})" $(MONGO_URI)
+	mongoimport --uri=$(MONGO_URI) -c schools --jsonArray --file schools.json
+	rm schools.json
 
 process_actors:
-	rm -f result.geocoded.csv
 	@echo "Process actors  $(MONGO_URI)"
-	node scripts/csv-actors.js $(ACTORS_FILE) > result.json
-	node scripts/pre-geocode.js > result.csv
-	curl -X POST -F data=@./result.csv -F columns=address -F columns=city -F columns=postalCode https://api-adresse.data.gouv.fr/search/csv/ -O -J
-	node scripts/post-geocode.js > result2.json
-	mongo -p --eval "db.actors.remove({})" $(MONGO_URI)
-	mongoimport --uri=$(MONGO_URI) -c actors --jsonArray --file result2.json
-	rm result.json result2.json result.geocoded.csv
+	node scripts/csv-actors.js $(ACTORS_FILE) > actors.json
+	node scripts/pre-geocode.js > addresses.csv
+	rm -f addresses.geocoded.csv
+	curl -X POST -F data=@./addresses.csv -F columns=address -F columns=city -F columns=postalCode https://api-adresse.data.gouv.fr/search/csv/ -O -J
+	node scripts/post-geocode.js > actors.geocoded.json
+	mongo --eval "db.actors.remove({})" $(MONGO_URI)
+	mongoimport --uri=$(MONGO_URI) -c actors --jsonArray --file actors.geocoded.json
+	rm actors.json actors.geocoded.json addresses.geocoded.csv addresses.csv
 
 db_seed:
 	make process_schools
