@@ -1,9 +1,3 @@
-// Installation:
-// > npm install get-stream csv-parser proj4 iconv-lite request
-//
-// Usage:
-// > node csv-schools.js > result.json
-// > mongoimport --uri=mongodb://localhost:27017/eac -c schools2 --jsonArray --file result.json
 const getStream = require('get-stream').array
 const csvParse = require('csv-parser')
 const proj4 = require('proj4')
@@ -28,16 +22,15 @@ async function parse() {
   )
 
   const normalizedRows = rows.map(r => {
-    const row = { ...r
-    }
-    if (r.coordonnee_x && r.coordonnee_y) {
+    const row = { ...r}
+    if (r.coordonnee_x && r.coordonnee_y && r.appellation_officielle) {
       const x = parseFloat(r.coordonnee_x.replace(/,/g, '.'))
       const y = parseFloat(r.coordonnee_y.replace(/,/g, '.'))
       return {
         name: row.appellation_officielle,
         postalCode: row.code_postal_uai,
         city: row.localite_acheminement_uai,
-        position: {
+        loc: {
           type: 'Point',
           coordinates: unproj.forward([x, y])
         }

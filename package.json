@@ -6,6 +6,8 @@
   "scripts": {
     "start": "DEBUG=koa* nodemon --inspect app.js",
     "debug": "nodemon inspect app.js",
+    "db-seed-local": "MONGO_URI=mongodb://localhost:27017/eac make db_seed",
+    "db-seed-prod": "echo \"Not implemented yet (WIP)\" && exit 1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "BetaGouv",
@@ -16,5 +18,19 @@
     "koa-router": "^7.4.0",
     "mongoose": "^5.1.5",
     "nodemon": "^1.17.5"
+  },
+  "devDependencies": {
+    "addok-geocode-stream": "^0.1.0",
+    "csv-parse": "^2.5.0",
+    "csv-parser": "^1.12.1",
+    "csv-write-stream": "^2.0.0",
+    "epsg-index": "^0.14.0",
+    "get-stream": "^3.0.0",
+    "iconv-lite": "^0.4.23",
+    "proj4": "^2.4.4",
+    "r2": "^2.0.1",
+    "request": "^2.87.0",
+    "superagent": "^3.8.3",
+    "uuid": "^3.3.0"
   }
 }
