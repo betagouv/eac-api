@@ -11,7 +11,7 @@ function uuidv4() {
 
 async function parse () {
   const rows = await getStream(
-    fs.createReadStream('/Users/raphael/Downloads/liste.csv')
+    fs.createReadStream(process.argv[2])
       .pipe(csvParse({skip_lines_with_error: true, columns: true}))
   )
 
@@ -53,6 +53,7 @@ function parseDomain (domains) {
   domains.split(',')
     .map(a => a.trim())
     .map(a => a.replace(/�/, 'é'))
+    .map(a => a.replace(/^[Tt]h..tre$/, 'é'))
     .map(a => a.charAt(0).toUpperCase() + a.slice(1))
 }
 

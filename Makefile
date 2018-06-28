@@ -11,14 +11,13 @@ process_schools:
 process_actors:
 	rm -f result.geocoded.csv
 	@echo "Process actors  $(MONGO_URI)"
-	node scripts/csv-actors.js > result.json
+	node scripts/csv-actors.js $(ACTORS_FILE) > result.json
 	node scripts/pre-geocode.js > result.csv
 	curl -X POST -F data=@./result.csv -F columns=address -F columns=city -F columns=postalCode https://api-adresse.data.gouv.fr/search/csv/ -O -J
 	node scripts/post-geocode.js > result2.json
 	mongo -p --eval "db.actors.remove({})" $(MONGO_URI)
 	mongoimport --uri=$(MONGO_URI) -c actors --jsonArray --file result2.json
-	rm result.json
-	rm result2.json
+	rm result.json result2.json result.geocoded.csv
 
 db_seed:
 	make process_schools
