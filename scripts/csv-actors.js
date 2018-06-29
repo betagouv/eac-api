@@ -2,11 +2,12 @@ const getStream = require('get-stream').array
 const csvParse = require('csv-parse')
 const fs = require('fs')
 
-function uuidv4() {
+function uuidv4 () {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
     return v.toString(16)
-  });
+  })
 }
 
 async function parse () {
@@ -16,7 +17,7 @@ async function parse () {
   )
 
   const normalizedRows = rows.map(r => {
-    const row = { ...r}
+    const row = {...r}
     return {
       id: uuidv4(),
       name: row.name,

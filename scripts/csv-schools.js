@@ -11,18 +11,18 @@ const unproj = proj4(
 
 const url = 'https://www.data.gouv.fr/s/resources/adresse-et-geolocalisation-des-etablissements-denseignement-du-premier-et-second-degres/20160526-143453/DEPP-etab-1D2D.csv'
 
-async function parse() {
+async function parse () {
   const rows = await getStream(
     request(url)
-    .pipe(iconv.decodeStream('ISO-8859-1'))
-    .pipe(iconv.encodeStream('utf8'))
-    .pipe(csvParse({
-      separator: ';'
-    }))
+      .pipe(iconv.decodeStream('ISO-8859-1'))
+      .pipe(iconv.encodeStream('utf8'))
+      .pipe(csvParse({
+        separator: ';'
+      }))
   )
 
   const normalizedRows = rows.map(r => {
-    const row = { ...r}
+    const row = {...r}
     if (r.coordonnee_x && r.coordonnee_y && r.appellation_officielle) {
       const x = parseFloat(r.coordonnee_x.replace(/,/g, '.'))
       const y = parseFloat(r.coordonnee_y.replace(/,/g, '.'))

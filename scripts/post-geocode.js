@@ -2,7 +2,7 @@ const fs = require('fs')
 const getStream = require('get-stream').array
 const csvParse = require('csv-parser')
 
-async function parse() {
+async function parse () {
   const geoRows = await getStream(
     fs.createReadStream('./addresses.geocoded.csv')
       .pipe(csvParse())

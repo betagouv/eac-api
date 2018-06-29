@@ -10,7 +10,7 @@ const router = new Router()
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/eac')
 
-function apiRender(context, body) {
+function apiRender (context, body) {
   context.set('Content-Type', 'application/json')
   context.set('Access-Control-Allow-Origin', '*')
   context.body = JSON.stringify(body)
@@ -27,19 +27,18 @@ router.get('/actors/search/:q', async ctx => {
   const criteria = { $text: { $search: words } }
   // Filter with certain domains
   const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
-  if(domains) criteria.domains = {$in: domains}
+  if (domains) criteria.domains = {$in: domains}
   // Search within 100km
   const from = ctx.request.query.from
   let actors
-  if(from) {
+  if (from) {
     const location = from.split(',').map(v => Number(v))
-    criteria.loc = { $geoWithin: { $centerSphere: [location, 100 / 3963.2 ]} }
+    criteria.loc = { $geoWithin: { $centerSphere: [ location, 100 / 3963.2 ] } }
     actors = await Actor.find(criteria).limit(100)
     // Calculate the distance and sort
-    actors.forEach(actor => actor.location = location)
+    actors.forEach(actor => { actor.location = location })
     actors.sort((a, b) => a.distance > b.distance)
-  }
-  else {
+  } else {
     actors = await Actor.find(criteria).limit(100)
   }
   apiRender(ctx, actors)
