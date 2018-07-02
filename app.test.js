@@ -17,8 +17,8 @@ describe('Test Schools Route', () => {
     return request(app.callback())
       .get(schoolsSearchUrl)
       .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
       .expect(res => {
+        console.log(res, res.body)
         res.body[0].name = 'Lycée Liberté'
         res.body[0].city = 'Paris'
       })
