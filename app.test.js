@@ -2,6 +2,14 @@ const app = require('./app')
 const request = require('supertest')
 const mongoose = require('mongoose')
 
+async function waitForIndexes() {
+  const Actor = require('./models/actor')
+  const School = require('./models/school')
+  await Actor.ensureIndexes()
+  await School.ensureIndexes()
+}
+waitForIndexes()
+
 describe('Test Schools Route', () => {
   const School = require('./models/school')
   School.create({ 
