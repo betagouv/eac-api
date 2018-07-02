@@ -9,18 +9,18 @@ describe('Test Schools Route', () => {
     city: 'Paris',
     loc: { type: 'Point', coordinates: [1, 2] },
   })
-  const schoolsSearchUrl = '/schools/search/Lycée Liberté Nantes'
+  const schoolsSearchUrl = '/schools/search/Lycée Liberté Paris'
   afterAll(() => {
     mongoose.disconnect()
   })
   test('respond with json', async () => {
-    return request(app.callback())
+    return await request(app.callback())
       .get(schoolsSearchUrl)
       .set('Accept', 'application/json')
+      .expect(200)
       .expect(res => {
-        console.log(res, res.body)
-        res.body[0].name = 'Lycée Liberté'
-        res.body[0].city = 'Paris'
+        expect(res.body[0].name).toBe('Lycée Liberté')
+        expect(res.body[0].city).toBe('Paris')
       })
   })
   

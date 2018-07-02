@@ -5,6 +5,12 @@ const mongoose = require('mongoose')
 const Actor = require('./models/actor')
 const School = require('./models/school')
 
+async function waitForIndexes() {
+  await Actor.ensureIndexes()
+  await School.ensureIndexes()
+}
+waitForIndexes()
+
 const app = new Koa()
 const router = new Router()
 
