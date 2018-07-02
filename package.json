@@ -8,7 +8,7 @@
     "debug": "nodemon inspect server.js",
     "db-seed-local": "MONGO_URI=mongodb://localhost:27017/eac make db_seed",
     "db-seed-prod": "echo \"Not implemented yet (WIP)\" && exit 1",
-    "test": "jest --forceExit"
+    "test": "node tests/seed.js && jest --forceExit"
   },
   "author": "BetaGouv",
   "license": "MIT",
