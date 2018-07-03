@@ -23,8 +23,9 @@ pointing to a running instance.
 
 ## DB seed
 
-Use this command to seed your DB (tested on MacOS, node v10):
+Use this command to seed a DB (tested on MacOS, node v10):
 
 ```bash
-ACTORS_FILE=/path/to/loup/actors/csv/file npm run db-seed-local
+# Local
+MONGO_URI=mongodb://localhost:27017/eac ACTORS_FILE=/path/to/loup/actors/csv/file npm run db-seed
 ```

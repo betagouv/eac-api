@@ -10,6 +10,7 @@ async function itemsToCsv (items) {
 
 async function parse () {
   let rows = require(`${__dirname}/../actors.json`)
+  rows = rows.slice(parseInt(process.argv[2]), parseInt(process.argv[2]) + 1000)
   rows = rows.filter(x => !x.loc)
     .filter(x => `${x.address},${x.city},${x.postalCode}`.length < 190)
     .map(x => {
@@ -21,7 +22,7 @@ async function parse () {
       }
     })
   const res = await itemsToCsv(rows)
-  console.log(res.join(''))
+  console.log(res.filter(x => x).join(''))
 }
 
 parse()

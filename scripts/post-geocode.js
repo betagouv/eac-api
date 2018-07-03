@@ -9,6 +9,7 @@ async function parse () {
   )
 
   let rows = require(`${__dirname}/../actors.json`)
+  rows = rows.slice(parseInt(process.argv[2]), parseInt(process.argv[2]) + 1000)
   rows = rows.map(row => {
     if (!row.loc || !row.loc.coordinates) {
       const geoRow = geoRows.find(gr => {

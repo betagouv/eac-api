@@ -6,8 +6,7 @@
   "scripts": {
     "start": "DEBUG=koa* nodemon --inspect app.js",
     "debug": "nodemon inspect app.js",
-    "db-seed-local": "MONGO_URI=mongodb://localhost:27017/eac make db_seed",
-    "db-seed-prod": "echo \"Not implemented yet (WIP)\" && exit 1",
+    "db-seed": "make db_seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "BetaGouv",
