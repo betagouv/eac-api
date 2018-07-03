@@ -72,4 +72,5 @@ router.get('/schools/:id', async ctx => {
 })
 
 app.use(router.routes())
-app.listen(process.env.PORT || 3000)
+
+module.exports = app
