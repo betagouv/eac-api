@@ -12,7 +12,7 @@ describe('Test Schools Route', async () => {
     const response = await request(app.callback())
       .get(schoolsSearchUrl)
       .set('Accept', 'application/json')
-      .expect(200);
+      .expect(200)
     expect(response.body[0].name).toBe('Lycée Liberté')
     expect(response.body[0].city).toBe('Paris')
     const id = response.body[0]._id
