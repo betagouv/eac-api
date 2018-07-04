@@ -10,7 +10,7 @@ async function schools (db) {
       coordinates: [1, 2]
     }
   })
-  await schools.createIndex({
+  return schools.createIndex({
     name: 'text',
     city: 'text'
   })
@@ -27,7 +27,7 @@ async function actors (db) {
       coordinates: [1, 2]
     }
   })
-  await actors.createIndex({
+  return actors.createIndex({
     name: 'text',
     description: 'text'
   })
@@ -36,9 +36,8 @@ async function actors (db) {
 async function seed () {
   const client = await MongoClient.connect('mongodb://localhost')
   const db = await client.db('eac')
-  console.log('hop')
-  schools(db)
-  actors(db)
+  await schools(db)
+  await actors(db)
   client.close()
 }
 seed()
