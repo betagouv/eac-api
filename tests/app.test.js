@@ -1,12 +1,15 @@
+/* global describe, test, expect, afterAll */
 const app = require('../app')
 const request = require('supertest')
 const mongoose = require('mongoose')
 
+require('./seed')
+
+afterAll(() => {
+  mongoose.disconnect()
+})
 
 describe('Test Schools Route', async () => {
-  afterAll(() => {
-    mongoose.disconnect()
-  })
   const schoolsSearchUrl = '/schools/search/Lycée Liberté Paris'
   test(`Ask for ${schoolsSearchUrl}`, async () => {
     const response = await request(app.callback())
@@ -21,5 +24,16 @@ describe('Test Schools Route', async () => {
       .set('Accept', 'application/json')
       .expect(200)
       .expect(r => expect(r.body._id).toBe(id))
+  })
+})
+
+describe('Test Domains', async () => {
+  const domainsUrl = '/domains'
+  test(`Ask for ${domainsUrl}`, async () => {
+    const response = await request(app.callback())
+      .get(domainsUrl)
+      .set('Accept', 'application/json')
+      .expect(200)
+    expect(response.body.filter(x => ['spectacle vivant', 'cirque'].includes(x)).length).toBe(2)
   })
 })

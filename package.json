@@ -7,7 +7,7 @@
     "start": "DEBUG=koa* nodemon --inspect server.js",
     "debug": "nodemon inspect server.js",
     "db-seed": "make db_seed",
-    "test": "node tests/seed.js && jest --forceExit"
+    "test": "jest --forceExit"
   },
   "author": "BetaGouv",
   "license": "MIT",
