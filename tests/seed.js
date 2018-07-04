@@ -10,12 +10,10 @@ async function schools (db) {
       coordinates: [1, 2]
     }
   })
-  try {
-    await schools.createIndex({
-      name: 'text',
-      city: 'text'
-    })
-  } catch (e) {}
+  await schools.createIndex({
+    name: 'text',
+    city: 'text'
+  })
 }
 
 async function actors (db) {
@@ -29,12 +27,10 @@ async function actors (db) {
       coordinates: [1, 2]
     }
   })
-  try {
-    await actors.createIndex({
-      name: 'text',
-      description: 'text'
-    })
-  } catch (e) {}
+  await actors.createIndex({
+    name: 'text',
+    description: 'text'
+  })
 }
 
 async function seed () {

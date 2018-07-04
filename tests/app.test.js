@@ -3,8 +3,6 @@ const app = require('../app')
 const request = require('supertest')
 const mongoose = require('mongoose')
 
-require('./seed')
-
 afterAll(() => {
   mongoose.disconnect()
 })
