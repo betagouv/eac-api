@@ -37,7 +37,7 @@ router.get('/actors/search/:q', async ctx => {
     actors = await Actor.find(criteria).limit(100)
     // Calculate the distance and sort
     actors.forEach(actor => { actor.location = location })
-    actors.sort((a, b) => a.distance > b.distance)
+    actors.sort((a, b) => a.distance - b.distance)
   } else {
     actors = await Actor.find(criteria).limit(100)
   }
