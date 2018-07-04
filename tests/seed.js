@@ -36,6 +36,7 @@ async function actors (db) {
 async function seed () {
   const client = await MongoClient.connect('mongodb://localhost')
   const db = await client.db('eac')
+  console.log('hop')
   schools(db)
   actors(db)
   client.close()
