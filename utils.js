@@ -15,4 +15,10 @@ function deg2rad (deg) {
   return deg * (Math.PI / 180)
 }
 
-module.exports = { distance }
+function apiRender (context, body) {
+  context.set('Content-Type', 'application/json')
+  context.set('Access-Control-Allow-Origin', '*')
+  context.body = JSON.stringify(body)
+}
+
+module.exports = { distance, apiRender }
