@@ -22,7 +22,7 @@ function apiRender (context, body, status) {
   context.body = JSON.stringify(body)
 }
 
-function isLatLngString(s) {
+function isLatLngString (s) {
   return s.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/)
 }
 

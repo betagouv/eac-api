@@ -73,17 +73,15 @@ router
     apiRender(ctx, actor)
   })
 
-
-async function createOrUpdateActor(ctx, callback) {
+async function createOrUpdateActor (ctx, callback) {
   const params = ctx.request.body
   try {
-    console.log(ctx.request.body)
     if (!(params.latLng && utils.isLatLngString(params.latLng))) {
-      throw {
+      throw new Error({
         'message': 'latLng must be a coma separated string, e.g: "1.23,4.56"'
-      }
+      })
     }
-    const actor = await callback({
+    const properties = {
       name: params.name,
       description: params.description || '',
       loc: {
@@ -92,7 +90,8 @@ async function createOrUpdateActor(ctx, callback) {
       },
       domains: params.domains || [],
       contactName: params.contactName || ''
-    })
+    }
+    const actor = await callback(properties)
     apiRender(ctx, actor)
   } catch (e) {
     apiRender(ctx, {
