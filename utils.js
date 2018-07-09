@@ -15,10 +15,15 @@ function deg2rad (deg) {
   return deg * (Math.PI / 180)
 }
 
-function apiRender (context, body) {
+function apiRender (context, body, status) {
   context.set('Content-Type', 'application/json')
   context.set('Access-Control-Allow-Origin', '*')
+  context.response.status = status || 200
   context.body = JSON.stringify(body)
 }
 
-module.exports = { distance, apiRender }
+function isLatLngString(s) {
+  return s.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/)
+}
+
+module.exports = { distance, apiRender, isLatLngString }

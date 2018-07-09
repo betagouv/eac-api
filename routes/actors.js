@@ -1,5 +1,9 @@
-const router = require('koa-router')({prefix: '/actors'})
-const apiRender = require('../utils').apiRender
+const router = require('koa-router')({
+  prefix: '/actors'
+})
+const utils = require('../utils')
+const apiRender = utils.apiRender
+const bodyParser = require('koa-body')
 
 const Actor = require('../models/actor')
 
@@ -7,6 +11,21 @@ router
   .get('/', async ctx => {
     const actors = await Actor.find().limit(100)
     apiRender(ctx, actors)
+  })
+
+  .post('/', bodyParser(), async ctx => {
+    await createOrUpdateActor(ctx, x => Actor.create(x))
+  })
+
+  .put('/:id', bodyParser(), async ctx => {
+    await createOrUpdateActor(ctx, x => Actor.findByIdAndUpdate(ctx.params.id, x, {new: true}))
+  })
+
+  .delete('/:id', async ctx => {
+    const actor = await Actor.deleteOne({
+      _id: ctx.params.id
+    })
+    apiRender(ctx, actor)
   })
 
   .get('/search/:q', async ctx => {
@@ -53,5 +72,33 @@ router
     actor.location = ctx.request.query.from
     apiRender(ctx, actor)
   })
+
+
+async function createOrUpdateActor(ctx, callback) {
+  const params = ctx.request.body
+  try {
+    console.log(ctx.request.body)
+    if (!(params.latLng && utils.isLatLngString(params.latLng))) {
+      throw {
+        'message': 'latLng must be a coma separated string, e.g: "1.23,4.56"'
+      }
+    }
+    const actor = await callback({
+      name: params.name,
+      description: params.description || '',
+      loc: {
+        type: 'Point',
+        coordinates: params.latLng.split(',').map(parseFloat)
+      },
+      domains: params.domains || [],
+      contactName: params.contactName || ''
+    })
+    apiRender(ctx, actor)
+  } catch (e) {
+    apiRender(ctx, {
+      message: e.message
+    }, 400)
+  }
+}
 
 module.exports = router

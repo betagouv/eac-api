@@ -5,6 +5,8 @@ const ActorSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
   loc: { type: Object, index: '2dsphere' },
+  domains: Array,
+  contactName: String,
   distance: Number
 })
 
