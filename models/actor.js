@@ -1,9 +1,13 @@
 const mongoose = require('mongoose')
 const utils = require('../utils')
 
+function cleanText (t) {
+  return t.replace(/\u0092/g, '’')
+}
+
 const ActorSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  description: String,
+  description: { type: String, get: cleanText },
   loc: { type: Object, index: '2dsphere' },
   domains: Array,
   contactName: String,
@@ -20,5 +24,8 @@ class Actor {
 
 ActorSchema.index({ name: 'text', description: 'text' })
 ActorSchema.loadClass(Actor)
+
+ActorSchema.set('toObject', { getters: true })
+ActorSchema.set('toJSON', { getters: true })
 
 module.exports = mongoose.model('Actor', ActorSchema)
