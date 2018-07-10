@@ -17,7 +17,6 @@ function deg2rad (deg) {
 
 function apiRender (context, body, status) {
   context.set('Content-Type', 'application/json')
-  context.set('Access-Control-Allow-Origin', '*')
   context.response.status = status || 200
   context.body = JSON.stringify(body)
 }

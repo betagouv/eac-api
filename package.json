@@ -18,6 +18,7 @@
   "dependencies": {
     "koa": "^2.5.1",
     "koa-body": "^4.0.4",
+    "koa-cors": "0.0.16",
     "koa-router": "^7.4.0",
     "mongoose": "^5.1.7",
     "nodemon": "^1.17.5"
