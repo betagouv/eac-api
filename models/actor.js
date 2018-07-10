@@ -12,7 +12,7 @@ const ActorSchema = new mongoose.Schema({
   domains: Array,
   contactName: String,
   distance: Number
-})
+}, {strict: false})
 
 class Actor {
   set location (latLng) {
