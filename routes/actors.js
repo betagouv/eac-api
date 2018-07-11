@@ -3,7 +3,6 @@ const router = require('koa-router')({
 })
 const utils = require('../utils')
 const apiRender = utils.apiRender
-const bodyParser = require('koa-body')
 
 const Actor = require('../models/actor')
 
@@ -13,11 +12,11 @@ router
     apiRender(ctx, actors)
   })
 
-  .post('/', bodyParser(), async ctx => {
+  .post('/', async ctx => {
     await createOrUpdateActor(ctx, x => Actor.create(x))
   })
 
-  .put('/:id', bodyParser(), async ctx => {
+  .put('/:id', async ctx => {
     await createOrUpdateActor(ctx, x => Actor.findByIdAndUpdate(ctx.params.id, x, {new: true}))
   })
 
