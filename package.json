@@ -16,9 +16,9 @@
     "url": "git+https://github.com/betagouv/eac-api.git"
   },
   "dependencies": {
+    "@koa/cors": "^2.2.1",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
-    "koa-cors": "0.0.16",
     "koa-router": "^7.4.0",
     "mongoose": "^5.1.7",
     "nodemon": "^1.17.5"
