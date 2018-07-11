@@ -27,11 +27,45 @@ describe('Test Schools Route', async () => {
 
 describe('Test Domains', async () => {
   const domainsUrl = '/domains'
-  test(`Ask for ${domainsUrl}`, async () => {
+  test(`Get domain list ${domainsUrl}`, async () => {
     const response = await request(app.callback())
       .get(domainsUrl)
       .set('Accept', 'application/json')
       .expect(200)
     expect(response.body.filter(x => ['spectacle vivant', 'cirque'].includes(x)).length).toBe(2)
   })
+})
+
+describe('Test actors', async () => {
+  const actorsUrl = '/actors'
+  const params = {
+    address: '1 rue de la paix',
+    city: 'Paris',
+    postalCode: '75000',
+    loc: {
+      type: 'Point',
+      coordinates: [1,2]
+    },
+    name: 'Cirque',
+    contactPhone: '0123456789',
+    contactName: 'Jane Doo',
+    contactEmail: 'test@example.org',
+    description: 'Lorem ispum',
+    domains: ['cirque'],
+  }
+  let actorId
+
+  test(`Create an actor ${actorsUrl}`, async () => {
+    const response = await request(app.callback())
+      .post(actorsUrl)
+      .send(params)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .expect(200)
+
+    expect(response.body.name).toBe(params.name)
+    expect(response.body.address).toBe(params.address)
+    actorId = response.body.id
+  })
+  
 })
