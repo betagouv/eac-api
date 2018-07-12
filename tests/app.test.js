@@ -44,14 +44,14 @@ describe('Test actors', async () => {
     postalCode: '75000',
     loc: {
       type: 'Point',
-      coordinates: [1,2]
+      coordinates: [1, 2]
     },
     name: 'Cirque',
     contactPhone: '0123456789',
     contactName: 'Jane Doo',
     contactEmail: 'test@example.org',
     description: 'Lorem ispum',
-    domains: ['cirque'],
+    domains: ['cirque']
   }
   let actorId
 
@@ -62,10 +62,17 @@ describe('Test actors', async () => {
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .expect(200)
-
     expect(response.body.name).toBe(params.name)
     expect(response.body.address).toBe(params.address)
     actorId = response.body.id
   })
-  
+
+  test(`Get an actor ${actorsUrl}/${actorId}`, async () => {
+    const response = await request(app.callback())
+      .get(`${actorsUrl}/${actorId}`)
+      .set('Accept', 'application/json')
+      .expect(200)
+    expect(response.body.name).toBe(params.name)
+    expect(response.body.address).toBe(params.address)
+  })
 })
