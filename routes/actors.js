@@ -75,7 +75,7 @@ router
 async function createOrUpdateActor (ctx, callback) {
   const params = ctx.request.body
   try {
-    const properties = params
+    const properties = {...params, ...{updatedAt: new Date()}}
     const actor = await callback(properties)
     apiRender(ctx, actor)
   } catch (e) {
