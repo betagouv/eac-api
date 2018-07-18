@@ -2,7 +2,7 @@
 const xlsx = require('xlsx')
 const uuidv4 = require('./uuidv4')
 
-const workbook = xlsx.readFile('/Users/raphael/Downloads/JMR_MUSEO_20180111.xlsx')
+const workbook = xlsx.readFile(process.argv[2])
 const rows = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
 
 const normalizedRows = rows.map(row => {
@@ -21,11 +21,12 @@ const normalizedRows = rows.map(row => {
     contactPhone: row.TEL_M,
     postalCode: row.CP_M,
     url: row.URL_M,
+    source: 'joconde',
     domains: parseDomain(row.THEMES),
   }
 })
 
-console.log(normalizedRows[0], normalizedRows[239], normalizedRows[999])
+console.log(JSON.stringify(normalizedRows))
 
 function parseDomain(d) {
   return d ? d.split(';').map(x => x.split(' :')[0]).map(x => x.trim()) : []

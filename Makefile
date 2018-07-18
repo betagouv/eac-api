@@ -18,19 +18,20 @@ remove_actors:
 process_actors_canope:
 	@echo "Process actors (canope) $(MONGO_URI)"
 	node scripts/csv-actors.js $(LOUP_ACTORS_FILE) > actors.json
-	LOUP_ACTORS_FILE=$(LOUP_ACTORS_FILE) MONGO_URI=$(MONGO_URI) ./scripts/geocode.sh
+	ACTORS_FILE=$(LOUP_ACTORS_FILE) MONGO_URI=$(MONGO_URI) ./scripts/geocode.sh
 	rm actors.json actors.geocoded.json addresses.geocoded.csv addresses.csv
 
 # Build actors from the file provided by Joconde via Nicolas
 process_actors_joconde:
 	@echo "Process actors (joconde) $(MONGO_URI)"
 	node scripts/xlsx-joconde.js $(JOCONDE_ACTORS_FILE) > actors.json
-	JOCONDE_ACTORS_FILE=$(JOCONDE_ACTORS_FILE) MONGO_URI=$(MONGO_URI) ./scripts/geocode.sh
+	ACTORS_FILE=$(JOCONDE_ACTORS_FILE) MONGO_URI=$(MONGO_URI) ./scripts/geocode.sh
 	rm actors.json actors.geocoded.json addresses.geocoded.csv addresses.csv
 
 # TODO: remove doublon with this script
 post_fix_actors:
 	@echo "todo"
+	node scripts/post-fix-actors.js $(MONGO_URI)
 
 # This seeds the whole database
 db_seed:

@@ -30,6 +30,7 @@ async function parse () {
       postalCode: row.code_postal,
       inseeCode: row.code_Insee,
       domains: parseDomain(row.Domaine),
+      source: 'canope',
       loc: row.coordonnees_finales && row.coordonnees_finales.split && {
         type: 'Point',
         coordinates: row.coordonnees_finales.split(',').map(v => Number(v.trim()))
