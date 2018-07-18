@@ -29,7 +29,7 @@ process_actors_joconde:
 	rm actors.json actors.geocoded.json addresses.geocoded.csv addresses.csv
 
 # TODO: remove doublon with this script
-post_fix_actors
+post_fix_actors:
 	@echo "todo"
 
 # This seeds the whole database
