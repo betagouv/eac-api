@@ -11,17 +11,16 @@ const unproj = proj4(
 
 const url = 'https://www.data.gouv.fr/s/resources/adresse-et-geolocalisation-des-etablissements-denseignement-du-premier-et-second-degres/20160526-143453/DEPP-etab-1D2D.csv'
 
-
 const rawName = /^(?:.cole (?:primaire|maternelle|.l.mentaire) *(?:d.application|a|b|priv.e|publique|[1-9])*|coll.ge)$/i
 
-function name(row) {
-  let name = row.appellation_officielle
-  if (!name) {
-    name = `${row.denomination_principale} ${row.patronyme_uai}`
-  } else if (name.match(rawName)) {
-    name = `${name} ${row.patronyme_uai}`
+function name (row) {
+  const official = row.appellation_officielle
+  if (!official) {
+    return `${row.denomination_principale} ${row.patronyme_uai}`
+  } else if (official.match(rawName)) {
+    return `${official} ${row.patronyme_uai}`
   }
-  return name
+  return official
 }
 
 async function parse () {
