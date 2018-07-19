@@ -9,7 +9,7 @@ const normalizedRows = rows.map(row => {
   return {
     id: uuidv4(),
     name: row.NOMOFF,
-    description: `${row.INTERET || ''} ${row.HIST || ''}`.trim(),
+    description: description(`${row.INTERET || ''} ${row.HIST || ''}`),
     dep: row.DPT,
     timetable: row.HORAIRES,
     address: row.ADRL1_M,
@@ -22,12 +22,30 @@ const normalizedRows = rows.map(row => {
     postalCode: row.CP_M,
     url: row.URL_M,
     source: 'joconde',
-    domains: parseDomain(row.THEMES),
+    domains: domains(row.THEMES),
+    rawDomains: row.THEMES,
+    createdAt: new Date()
   }
 })
 
 console.log(JSON.stringify(normalizedRows))
 
-function parseDomain(d) {
-  return d ? d.split(';').map(x => x.split(' :')[0]).map(x => x.trim()) : []
+function domains (d) {
+  if (!d) {
+    return []
+  }
+
+  return d.replace(/Archeologie/, 'Archéologie')
+    .replace(/.trangères?|nationales?/, '')
+    .replace(/Autres collections/, '')
+    .replace(/Civilisations /, 'Civilisation '),
+    .replace(/d imprim/, 'd\'imprim')
+    .replace(/Beaux-Arts/, 'Beaux-arts')
+    .split(/[#;/]/)
+    .map(x => x.split(/[:,(]/)[0])
+    .map(x => x.trim())
+}
+
+function description (d) {
+  return d.replace(/#/g, '\n\n').trim()
 }

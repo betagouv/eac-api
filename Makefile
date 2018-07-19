@@ -28,9 +28,9 @@ process_actors_joconde:
 	ACTORS_FILE=$(JOCONDE_ACTORS_FILE) MONGO_URI=$(MONGO_URI) ./scripts/geocode.sh
 	rm actors.json actors.geocoded.json addresses.geocoded.csv addresses.csv
 
-# TODO: remove doublon with this script
+# Remove doublon
 post_fix_actors:
-	@echo "todo"
+	@echo "Fix actors"
 	node scripts/post-fix-actors.js $(MONGO_URI)
 
 # This seeds the whole database
