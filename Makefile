@@ -11,7 +11,7 @@ process_schools:
 # Remove all actors from database (warning)
 remove_actors:
 	@echo "Remove all actors $(MONGO_URI)"
-	mongo --eval "db.actors.remove({})" $(MONGO_URI)
+	mongo --eval "db.actors.remove({ source: { \$$ne: 'eac_website' }  })" $(MONGO_URI)
 
 # Build actors from the file provided by Loup which is a mix between
 # canope scraping and some data added by Loup
