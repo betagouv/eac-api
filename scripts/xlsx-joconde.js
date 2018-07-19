@@ -38,7 +38,7 @@ function domains (d) {
   return d.replace(/Archeologie/, 'Archéologie')
     .replace(/.trangères?|nationales?/, '')
     .replace(/Autres collections/, '')
-    .replace(/Civilisations /, 'Civilisation '),
+    .replace(/Civilisations /, 'Civilisation ')
     .replace(/d imprim/, 'd\'imprim')
     .replace(/Beaux-Arts/, 'Beaux-arts')
     .split(/[#;/]/)
