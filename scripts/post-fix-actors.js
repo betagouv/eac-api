@@ -56,7 +56,7 @@ async function updateDb() {
   const client = await MongoClient.connect(process.argv[2], {
     useNewUrlParser: true
   })
-  const db = await client.db('eac')
+  const db = await client.db()
 
   // Get "duplicate" actors (without false positive <3)
   const actorsWithDup = (await db.collection('actors').aggregate([{

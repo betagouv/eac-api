@@ -43,7 +43,7 @@ function domains (d) {
     .replace(/b(?:ea|z)ux[\- ]arts/gi, 'beaux-arts')
     .replace(/.tr?angères?|nationales?|chrétien|r.gionale/gi, '')
     .replace(/autres collections/gi, '')
-    .replace(/(peinture|papier|sculpture|civilisation|ancien|photographie|textile)s/gi, '$1')
+    .replace(/(peinture|papier|sculpture|civilisation|ancien|photographie|textile|métier)s/gi, '$1')
     .replace(/d imprim/gi, 'd\'imprim')
     .replace(/sciences et technique[^s]/i, 'sciences et techniques')
     .replace(/aphotographie/i, 'photographie')
