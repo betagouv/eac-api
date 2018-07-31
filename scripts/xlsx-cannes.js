@@ -27,8 +27,8 @@ const actors = xlsx.utils.sheet_to_json(workbook.Sheets['acteurs']).filter(v => 
     domains: actor.domains && actor.domains.split(',').map(v => v.trim()),
     source: actor.source,
     url: actor.website,
-    drac: !!actor.drac,
-    daac: !!actor.daac,
+    drac: Boolean(actor.drac),
+    daac: Boolean(actor.daac),
     actions: actions.filter(r => r['(actorId)'] === actor['(id)']).map(trimAll).map(action => {
       return {
         id: uuidv4(),
@@ -44,11 +44,11 @@ const actors = xlsx.utils.sheet_to_json(workbook.Sheets['acteurs']).filter(v => 
         schoolLevels: action.schoolLevels.split(',').map(v => v.trim()),
         topics: action.topics && action.topics.split(',').map(v => v.trim()),
         website: action.website,
-        status: action.capacity,
+        capacity: action.capacity,
         status: action.status,
-        school: action.status,
-        cost: action.status,
-        source: action.status,
+        school: action.school,
+        cost: action.cost,
+        source: action.source,
       }
     }),
     createdAt: new Date()
