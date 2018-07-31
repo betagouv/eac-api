@@ -28,6 +28,13 @@ process_actors_joconde:
 	ACTORS_FILE=$(JOCONDE_ACTORS_FILE) MONGO_URI=$(MONGO_URI) ./scripts/geocode.sh
 	rm actors.json actors.geocoded.json addresses.geocoded.csv addresses.csv
 
+# Build actors from the file "Actions / Acteurs (manuel)" created by @vinyll
+process_actors_cannes:
+	@echo "Process actors (cannes) $(MONGO_URI)"
+	node scripts/xlsx-cannes.js $(CANNES_ACTORS_FILE) > actors.json
+	mongoimport --uri=$(MONGO_URI) -c actors --jsonArray --file actors.json
+	rm actors.json
+
 # Remove doublon
 post_fix_actors:
 	@echo "Fix actors"
@@ -39,4 +46,5 @@ db_seed:
 	make remove_actors
 	make process_actors_canope
 	make process_actors_joconde
+	make process_actors_cannes
 	make post_fix_actors
