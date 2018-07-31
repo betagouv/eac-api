@@ -15,7 +15,7 @@ function fuzzify(str) {
 // Check for fuzzy dups (beware, dragons)
 function isDup(actor) {
   // All names are fuzzified...
-  let names = actor.items.filter(a => a).map(a => fuzzify(a.name))
+  let names = actor.items.filter(a => a.name).map(a => fuzzify(a.name))
   // ... and truncated to the shortest name ...
   const shortest = Math.min(...(names.map(n => n.length)))
   names = names.map(n => n.substr(0, shortest))
