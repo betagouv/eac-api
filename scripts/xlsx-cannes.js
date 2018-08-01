@@ -27,8 +27,7 @@ const actors = xlsx.utils.sheet_to_json(workbook.Sheets['acteurs']).filter(v => 
     domains: actor.domains && actor.domains.split(',').map(v => v.trim()),
     source: actor.source,
     url: actor.website,
-    drac: Boolean(actor.drac),
-    daac: Boolean(actor.daac),
+    labels: actor.labels && actor.labels.split(',').map(v => v.trim()),
     actions: actions.filter(r => r['(actorId)'] === actor['(id)']).map(trimAll).map(action => {
       return {
         id: uuidv4(),
