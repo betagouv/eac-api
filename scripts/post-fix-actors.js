@@ -15,7 +15,7 @@ function fuzzify(str) {
 // Check for fuzzy dups (beware, dragons)
 function isDup(actor) {
   // All names are fuzzified...
-  let names = actor.items.filter(a => a).map(a => fuzzify(a.name))
+  let names = actor.items.filter(a => a.name).map(a => fuzzify(a.name))
   // ... and truncated to the shortest name ...
   const shortest = Math.min(...(names.map(n => n.length)))
   names = names.map(n => n.substr(0, shortest))
@@ -26,7 +26,7 @@ function isDup(actor) {
 
 // Compare sources of two 
 function bestSource(actors) {
-  const orderedSources = ['eac_website', 'joconde', 'canope']
+  const orderedSources = ['eac_website', 'direction_culture_cannes', 'joconde', 'canope']
   return actors.sort((x, y) => orderedSources.indexOf(x.source || '') - orderedSources.indexOf(y.source || ''))[0]
 }
 

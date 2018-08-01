@@ -30,5 +30,6 @@ Use this command to seed a DB (tested on MacOS, node v10):
 MONGO_URI=mongodb://localhost:27017/eac \ 
 LOUP_ACTORS_FILE=/path/to/loup/actors/csv/file \
 JOCONDE_ACTORS_FILE=/path/to/joconde/actors/xlsx/file \
+CANNES_ACTORS_FILE=/path/to/cannes/actors/xlsx/file \
 npm run db-seed
 ```
