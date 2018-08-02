@@ -2,6 +2,9 @@ const MongoClient = require('mongodb').MongoClient
 
 // Form "Museum municipal des  cinémas 9°" to "musee des cinemas"
 function fuzzify(str) {
+  if (!str) {
+    return ''
+  }
   return str.normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
@@ -15,7 +18,7 @@ function fuzzify(str) {
 // Check for fuzzy dups (beware, dragons)
 function isDup(actor) {
   // All names are fuzzified...
-  let names = actor.items.filter(a => a.name).map(a => fuzzify(a.name))
+  let names = actor.items.filter(a => a).map(a => fuzzify(a.name))
   // ... and truncated to the shortest name ...
   const shortest = Math.min(...(names.map(n => n.length)))
   names = names.map(n => n.substr(0, shortest))
@@ -51,17 +54,10 @@ function removeEmptyValues(o) {
   return o
 }
 
-// Main async func (beacause await)
-async function updateDb() {
-  const client = await MongoClient.connect(process.argv[2], {
-    useNewUrlParser: true
-  })
-  const db = await client.db()
-
-  // Get "duplicate" actors (without false positive <3)
-  const actorsWithDup = (await db.collection('actors').aggregate([{
+async function actorsDup(db, group) {
+  return (await db.collection('actors').aggregate([{
       '$group': {
-        _id: '$loc.coordinates',
+        _id: group,
         count: {
           $sum: 1
         },
@@ -78,6 +74,23 @@ async function updateDb() {
       }
     }
   ]).toArray()).filter(a => a.count > 1 && isDup(a))
+}
+
+// Main async func (beacause await)
+async function updateDb() {
+  const client = await MongoClient.connect(process.argv[2], {
+    useNewUrlParser: true
+  })
+  const db = await client.db()
+
+  // Get "duplicate" actors (without false positive <3)
+  const actorsWithDup = [
+    ...await actorsDup(db, '$loc.coordinates'),
+    ...await actorsDup(db, {
+      coordinates: '$loc.coordinates',
+      name: '$name',
+    })
+  ];
 
   // Recreate actors with more accurate values
   const newActors = actorsWithDup.map(actor => {
@@ -87,13 +100,11 @@ async function updateDb() {
         return bestSource([val, acc])
       } else {
         // Merge duplicate actors by taking the less "empty" properties (prefering the most recent)
-        return isNewer(val, acc) ?
-          { ...removeEmptyValues(acc),
-            ...removeEmptyValues(val)
-          } :
-          { ...removeEmptyValues(val),
-            ...removeEmptyValues(acc)
-          }
+        return isNewer(val, acc) ? { ...removeEmptyValues(acc),
+          ...removeEmptyValues(val)
+        } : { ...removeEmptyValues(val),
+          ...removeEmptyValues(acc)
+        }
       }
     }, actor.items[0])
   })
