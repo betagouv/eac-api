@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const utils = require('../utils')
 
 function cleanText (t) {
-  return t.replace(/\u0092/g, '’')
+  return (t && t.replace(/\u0092/g, '’')) || ''
 }
 
 const ActorSchema = new mongoose.Schema({
