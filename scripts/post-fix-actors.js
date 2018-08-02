@@ -76,22 +76,7 @@ async function actorsDup(db, group) {
   ]).toArray()).filter(a => a.count > 1 && isDup(a))
 }
 
-// Main async func (beacause await)
-async function updateDb() {
-  const client = await MongoClient.connect(process.argv[2], {
-    useNewUrlParser: true
-  })
-  const db = await client.db()
-
-  // Get "duplicate" actors (without false positive <3)
-  const actorsWithDup = [
-    ...await actorsDup(db, '$loc.coordinates'),
-    ...await actorsDup(db, {
-      coordinates: '$loc.coordinates',
-      name: '$name',
-    })
-  ];
-
+async function deDup(db, actorsWithDup) {
   // Recreate actors with more accurate values
   const newActors = actorsWithDup.map(actor => {
     return actor.items.reduce((acc, val) => {
@@ -119,6 +104,21 @@ async function updateDb() {
       $in: idsToRemove
     }
   })
+}
+
+// Main async func (beacause await)
+async function updateDb() {
+  const client = await MongoClient.connect(process.argv[2], {
+    useNewUrlParser: true
+  })
+  const db = await client.db()
+
+  deDup(db, await actorsDup(db, '$loc.coordinates'))
+  deDup(db, await actorsDup(db, {
+    coordinates: '$loc.coordinates',
+    name: '$name',
+  }))
+
   await client.close()
 }
 
