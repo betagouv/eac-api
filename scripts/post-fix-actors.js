@@ -113,8 +113,8 @@ async function updateDb() {
   })
   const db = await client.db()
 
-  deDup(db, await actorsDup(db, '$loc.coordinates'))
-  deDup(db, await actorsDup(db, {
+  await deDup(db, await actorsDup(db, '$loc.coordinates'))
+  await deDup(db, await actorsDup(db, {
     coordinates: '$loc.coordinates',
     name: '$name',
   }))
