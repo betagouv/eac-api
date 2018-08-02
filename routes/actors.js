@@ -27,14 +27,15 @@ router
     apiRender(ctx, actor)
   })
 
-  .get('/search/:q', async ctx => {
+  .get('/search/:q*', async ctx => {
     // Perform a _logical AND_ search
-    const words = ctx.params.q.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
-    const criteria = {
+    const words = ctx.params.q
+    const criteria = !words ? {} : {
       $text: {
-        $search: words
+        $search: words.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
       }
     }
+    
     // Filter with certain domains
     const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
     if (domains) {
