@@ -30,12 +30,13 @@ router
   .get('/search/:q*', async ctx => {
     // Perform a _logical AND_ search
     const words = ctx.params.q
+    const maxCount = 100
     const criteria = !words ? {} : {
       $text: {
         $search: words.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
       }
     }
-    
+
     // Filter with certain domains
     const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
     if (domains) {
@@ -53,14 +54,15 @@ router
           $centerSphere: [location, 100 / 3963.2]
         }
       }
-      actors = await Actor.find(criteria).limit(100)
+      actors = await Actor.find(criteria)
       // Calculate the distance and sort
       actors.forEach(actor => {
         actor.location = location
       })
       actors.sort((a, b) => a.distance - b.distance)
+      actors = actors.splice(0, maxCount)
     } else {
-      actors = await Actor.find(criteria).limit(100)
+      actors = await Actor.find(criteria).limit(maxCount)
     }
     apiRender(ctx, actors)
   })
