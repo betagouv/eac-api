@@ -11,7 +11,8 @@ const ActorSchema = new mongoose.Schema({
   loc: { type: Object, index: '2dsphere' },
   domains: Array,
   contactName: String,
-  distance: Number
+  distance: Number,
+  actions: Array
 }, {strict: false})
 
 class Actor {
@@ -23,7 +24,7 @@ class Actor {
 }
 
 ActorSchema.index({ name: 'text', description: 'text' },
-                  { default_language: 'french' })
+  { default_language: 'french' })
 ActorSchema.loadClass(Actor)
 
 ActorSchema.set('toObject', { getters: true })
