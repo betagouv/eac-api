@@ -23,8 +23,10 @@ class Actor {
   }
 }
 
-ActorSchema.index({ name: 'text', description: 'text' },
-  { default_language: 'french' })
+ActorSchema.index(
+  { name: 'text', description: 'text' },
+  { default_language: 'french' }
+)
 ActorSchema.loadClass(Actor)
 
 ActorSchema.set('toObject', { getters: true })
