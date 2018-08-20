@@ -30,7 +30,8 @@ router
   .get('/search/:q*', async ctx => {
     // Perform a _logical AND_ search
     const words = ctx.params.q
-    const maxCount = 100
+    const limit = Number(ctx.request.query.limit) || 100
+    const distance = Number(ctx.request.query.distance) || 100
     const criteria = !words ? {} : {
       $text: {
         $search: words.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
@@ -51,7 +52,7 @@ router
       const location = from.split(',').map(v => Number(v))
       criteria.loc = {
         $geoWithin: {
-          $centerSphere: [location, 100 / 3963.2]
+          $centerSphere: [location, distance / 3963.2]
         }
       }
       actors = await Actor.find(criteria)
@@ -60,9 +61,9 @@ router
         actor.location = location
       })
       actors.sort((a, b) => a.distance - b.distance)
-      actors = actors.splice(0, maxCount)
+      actors = actors.splice(0, limit)
     } else {
-      actors = await Actor.find(criteria).limit(maxCount)
+      actors = await Actor.find(criteria).limit(limit)
     }
     apiRender(ctx, actors)
   })
