@@ -29,7 +29,7 @@ function isDup(actor) {
 
 // Compare sources of two 
 function bestSource(actors) {
-  const orderedSources = ['eac_website', 'acteurs_actions_manuel', 'joconde', 'canope']
+  const orderedSources = ['eac_website', 'acteurs_actions_manuel', 'joconde', 'canope', 'direction_culture_cannes']
   return actors.sort((x, y) => orderedSources.indexOf(x.source || '') - orderedSources.indexOf(y.source || ''))[0]
 }
 
