@@ -8,6 +8,7 @@ const utils = require('../utils')
 const apiRender = utils.apiRender
 
 const Actor = require('../models/actor')
+const Action = require('../models/action')
 
 router
   .get('/', async ctx => {
@@ -71,7 +72,7 @@ router
       actors = await Actor.find(criteria).limit(limit)
     }
 
-    switch(format) {
+    switch (format) {
       case 'csv':
         const stream = csvWriter()
         actors.forEach(model => {
@@ -95,6 +96,7 @@ router
     const actor = await Actor.findOne({
       _id: ctx.params.id
     })
+    actor.actions = await Action.find({actorId: actor._id})
     actor.location = ctx.request.query.from
     apiRender(ctx, actor)
   })
