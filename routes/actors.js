@@ -105,11 +105,21 @@ async function createOrUpdateActor (ctx, callback) {
   const params = ctx.request.body
   try {
     const {actions, ...properties} = {...params, ...{updatedAt: new Date(), source: 'eac_website'}}
+
+    // Create actor.
     const actor = await callback(properties)
+    
+    // Remove deleted actions.
+    const existingActionsIds = (await Action.find({actorId: actor._id})).map(a => a.id)
+    const updatedActionsIds = params.actions ? params.actions.filter(a => a.id).map(a => a.id) : []
+    await Action.remove({ id: { $in: existingActionsIds.filter(x => !updatedActionsIds.includes(x)) }})
+
+    // Update existing actions and create new ones.
     params.actions && await Promise.all(params.actions.map(action => {
       const actionProperties = {...action, ...{actorId: actor._id}}
       return action.id ? Action.findByIdAndUpdate(action.id, actionProperties, {new: true}) : Action.create(actionProperties)
     }))
+    
     apiRender(ctx, actor)
   } catch (e) {
     apiRender(ctx, {
