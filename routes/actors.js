@@ -104,8 +104,12 @@ router
 async function createOrUpdateActor (ctx, callback) {
   const params = ctx.request.body
   try {
-    const properties = {...params, ...{updatedAt: new Date(), source: 'eac_website'}}
+    const {actions, ...properties} = {...params, ...{updatedAt: new Date(), source: 'eac_website'}}
     const actor = await callback(properties)
+    await Promise.all(params.actions.map(action => {
+      const actionProperties = {...action, ...{actorId: actor._id}}
+      return action.id ? Action.findByIdAndUpdate(action.id, actionProperties, {new: true}) : Action.create(actionProperties)
+    }))
     apiRender(ctx, actor)
   } catch (e) {
     apiRender(ctx, {
