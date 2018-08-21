@@ -12,7 +12,8 @@ const ActorSchema = new mongoose.Schema({
   domains: Array,
   contactName: String,
   distance: Number,
-  actions: Array
+  actions: Array,
+  createdAt: { type: Date, default: Date.now }
 }, {strict: false})
 
 class Actor {
