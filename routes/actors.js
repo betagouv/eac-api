@@ -78,6 +78,7 @@ router
         actors.forEach(model => {
           const actor = model._doc
           actor.location = actor.loc && actor.loc.coordinates.join(',')
+          actor.editUrl = `https://www.education-artistique-culturelle.fr/actor/${actor._id}/edit`
           delete actor._id
           delete actor.loc
           return stream.write(actor)
