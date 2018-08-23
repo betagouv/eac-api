@@ -28,6 +28,7 @@ router
     const actor = await Actor.deleteOne({
       _id: ctx.params.id
     })
+    await Action.find({ actorId: ctx.params.id }).remove()
     apiRender(ctx, actor)
   })
 
