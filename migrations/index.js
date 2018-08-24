@@ -19,10 +19,10 @@ db.actors.find({
   })
 })
 
-print("Set updatedAt and createdAt...") 
+print("Set updatedAt and createdAt...")
 const origin = new Date('2018-07-01')
 
-print("  ... No date at all") 
+print("  ... No date at all")
 db.actors.find({
   updatedAt: null,
   createdAt: null
@@ -30,8 +30,10 @@ db.actors.find({
   db.actors.update({
     _id: actor._id
   }, {
-    updatedAt: origin,
-    createdAt: origin
+    $set: {
+      updatedAt: origin,
+      createdAt: origin
+    }
   })
 })
 
@@ -42,7 +44,9 @@ db.actors.find({
   db.actors.update({
     _id: actor._id
   }, {
-    createdAt: actor.updatedAt
+    $set: {
+      createdAt: actor.updatedAt
+    }
   })
 })
 
@@ -53,7 +57,9 @@ db.actors.find({
   db.actors.update({
     _id: actor._id
   }, {
-    updatedAt: actor.createdAt
+    $set: {
+      updatedAt: actor.createdAt
+    }
   })
 })
 
