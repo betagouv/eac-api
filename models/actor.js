@@ -22,6 +22,13 @@ class Actor {
     if (typeof (latLng) === 'string') latLng = latLng.split(',').map(v => Number(v))
     this.distance = utils.distance(latLng, this.loc.coordinates)
   }
+
+  save (cb) {
+    if (!this.department && this.postalCode) {
+      this.department = this.postalCode.slice(0, -3)
+    }
+    return super.save(cb)
+  }
 }
 
 ActorSchema.index(
