@@ -1,4 +1,3 @@
-const fs = require('fs')
 const csvWriter = require('csv-write-stream')
 
 const router = require('koa-router')({
@@ -6,6 +5,7 @@ const router = require('koa-router')({
 })
 const utils = require('../utils')
 const apiRender = utils.apiRender
+const searchCriteria = utils.searchCriteria
 
 const Actor = require('../models/actor')
 const Action = require('../models/action')
@@ -33,37 +33,16 @@ router
   })
 
   .get('/search/:q*', async ctx => {
-    // Perform a _logical AND_ search
-    const words = ctx.params.q
     const from = ctx.request.query.from
+    const location = from && from.split(',').map(v => Number(v))
     const limit = Number(ctx.request.query.limit) || 100
-    const distance = Number(ctx.request.query.distance) || 100
-    const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
     const format = ctx.request.query.format || 'json'
+    const criteria = searchCriteria(ctx);
 
-    const criteria = !words ? {} : {
-      $text: {
-        $search: words.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
-      }
-    }
+    let actors = []
 
-    // Filter with certain domains
-    if (domains) {
-      criteria.domains = {
-        $in: domains
-      }
-    }
-    // Search within 100km
-    let actors
     if (from) {
-      const location = from.split(',').map(v => Number(v))
-      criteria.loc = {
-        $geoWithin: {
-          $centerSphere: [location, distance / 3963.2]
-        }
-      }
       actors = await Actor.find(criteria)
-      // Calculate the distance and sort
       actors.forEach(actor => {
         actor.location = location
       })
@@ -75,19 +54,7 @@ router
 
     switch (format) {
       case 'csv':
-        const stream = csvWriter()
-        actors.forEach(model => {
-          const actor = model._doc
-          actor.location = actor.loc && actor.loc.coordinates.join(',')
-          actor.editUrl = `https://www.education-artistique-culturelle.fr/actor/${actor._id}/edit`
-          delete actor.id
-          delete actor.loc
-          return stream.write(actor)
-        })
-        ctx.set('Content-disposition', `attachment; filename=actors-export.csv`)
-        ctx.statusCode = 200
-        ctx.body = stream
-        stream.end()
+        apiRenderCsv(ctx, actors.map(actor => actor.toCsv()))
         break
       default:
         apiRender(ctx, actors)

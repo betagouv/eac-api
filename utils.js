@@ -21,8 +21,48 @@ function apiRender (context, body, status) {
   context.body = JSON.stringify(body)
 }
 
+function apiRenderCsv (context, items) {
+  const stream = csvWriter()
+  items.forEach(item => {
+    stream.write(item)
+  })
+  context.set('Content-disposition', `attachment; filename=export.csv`)
+  context.statusCode = 200
+  context.body = stream
+  stream.end()
+}
+
 function isLatLngString (s) {
   return s.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/)
 }
 
-module.exports = { distance, apiRender, isLatLngString }
+function searchCriteria(ctx) {
+  const words = ctx.params.q
+  const from = ctx.request.query.from
+  const distance = Number(ctx.request.query.distance) || 100
+  const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
+
+  const criteria = !words ? {} : {
+    $text: {
+      $search: words.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
+    }
+  }
+
+  if (domains) {
+    criteria.domains = {
+      $in: domains
+    }
+  }
+
+  if (from) {
+    const location = from.split(',').map(v => Number(v))
+    criteria.loc = {
+      $geoWithin: {
+        $centerSphere: [location, distance / 3963.2]
+      }
+    }
+  }
+  return criteria;
+}
+
+module.exports = { distance, apiRender, isLatLngString, searchCriteria, apiRenderCsv }
