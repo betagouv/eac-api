@@ -38,7 +38,7 @@ function isLatLngString (s) {
   return s.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/)
 }
 
-function searchCriteria(ctx) {
+function searchCriteria (ctx) {
   const words = ctx.params.q
   const from = ctx.request.query.from
   const distance = Number(ctx.request.query.distance) || 100
@@ -64,7 +64,7 @@ function searchCriteria(ctx) {
       }
     }
   }
-  return criteria;
+  return criteria
 }
 
 module.exports = { distance, apiRender, isLatLngString, searchCriteria, apiRenderCsv }

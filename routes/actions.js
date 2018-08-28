@@ -5,8 +5,9 @@ const {apiRender, apiRenderCsv, searchCriteria} = require('../utils')
 
 const Action = require('../models/action')
 
-const aggregateRules = [{
-    "$unwind": "$actorId"
+const aggregateRules = [
+  {
+    '$unwind': '$actorId'
   },
   {
     $lookup: {
@@ -17,7 +18,7 @@ const aggregateRules = [{
     }
   },
   {
-    "$unwind": "$actor"
+    '$unwind': '$actor'
   }
 ]
 
