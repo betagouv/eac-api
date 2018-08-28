@@ -70,11 +70,9 @@ db.actions.find({}).forEach(action => {
   })
   if (!actor || !actor._id) {
     print (` ...remove action ${action._id}`)
-    /*
     db.actions.remove({
       _id: action._id
     })
-    */
   }
 })
 
