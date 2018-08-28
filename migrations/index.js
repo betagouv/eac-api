@@ -63,4 +63,38 @@ db.actors.find({
   })
 })
 
+print("Delete orphans actions...")
+db.actions.find({}).forEach(action => {
+  const actor = db.actors.findOne({
+    _id: action.actorId[0]
+  })
+  if (!actor || !actor._id) {
+    print (` ...remove action ${action._id}`)
+    /*
+    db.actions.remove({
+      _id: action._id
+    })
+    */
+  }
+})
+
+print("Update loc for all actions...")
+db.actions.find({
+  loc: null
+}).forEach(action => {
+  const actor = db.actors.findOne({
+    _id: action.actorId[0]
+  })
+  if (actor && actor._id) {
+    print (` ...update loc for action ${action._id}`)
+    db.actions.update({
+      _id: action._id
+    }, {
+      $set: {
+        loc: actor.loc
+      }
+    })
+  }
+})
+
 print("Done 🎊")
