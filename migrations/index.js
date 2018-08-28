@@ -65,10 +65,17 @@ db.actors.find({
 
 print("Delete orphans actions...")
 db.actions.find({}).forEach(action => {
-  const actor = db.actors.findOne({
-    _id: action.actorId[0]
-  })
-  if (!actor || !actor._id) {
+  if (action.actorId && action.actorId[0]) {
+    const actor = db.actors.findOne({
+      _id: action.actorId[0]
+    })
+    if (!actor || !actor._id) {
+      print (` ...remove action ${action._id}`)
+      db.actions.remove({
+        _id: action._id
+      })
+    }
+  } else {
     print (` ...remove action ${action._id}`)
     db.actions.remove({
       _id: action._id
