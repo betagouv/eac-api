@@ -34,7 +34,7 @@ const actors = xlsx.utils.sheet_to_json(workbook.Sheets['acteurs']).filter(v => 
         id: uuidv4(),
         name: action['name*'],
         description: action['description*'],
-        location: action.location && {
+        loc: action.location && {
           type: 'Point',
           coordinates: action.location.split(',').map(v => parseFloat(v.trim())).reverse()
         },

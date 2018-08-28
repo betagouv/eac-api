@@ -80,18 +80,31 @@ print("Update loc for all actions...")
 db.actions.find({
   loc: null
 }).forEach(action => {
-  const actor = db.actors.findOne({
-    _id: action.actorId[0]
-  })
-  if (actor && actor._id) {
-    print (` ...update loc for action ${action._id}`)
+  if (action.location) {
     db.actions.update({
       _id: action._id
     }, {
       $set: {
-        loc: actor.loc
+        loc: action.location
+      },
+      $unset: {
+        loc: action.loc
       }
     })
+  } else {
+    const actor = db.actors.findOne({
+      _id: action.actorId[0]
+    })
+    if (actor && actor._id) {
+      print (` ...update loc for action ${action._id}`)
+      db.actions.update({
+        _id: action._id
+      }, {
+        $set: {
+          loc: actor.loc
+        }
+      })
+    }
   }
 })
 
