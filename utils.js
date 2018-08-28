@@ -1,3 +1,5 @@
+const csvWriter = require('csv-write-stream')
+
 function distance (latlng1 = [], latlng2 = []) {
   const [lat1, lng1] = latlng1
   const [lat2, lng2] = latlng2

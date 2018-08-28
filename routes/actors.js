@@ -1,12 +1,7 @@
-const csvWriter = require('csv-write-stream')
-
 const router = require('koa-router')({
   prefix: '/actors'
 })
-const utils = require('../utils')
-const apiRender = utils.apiRender
-const searchCriteria = utils.searchCriteria
-
+const {apiRender, apiRenderCsv, searchCriteria} = require('../utils')
 const Actor = require('../models/actor')
 const Action = require('../models/action')
 
@@ -85,7 +80,7 @@ async function createOrUpdateActor (ctx, callback) {
 
     // Update existing actions and create new ones.
     params.actions && await Promise.all(params.actions.map(action => {
-      const actionProperties = {...action, ...{actorId: actor._id}}
+      const actionProperties = {...action, ...{actorId: actor._id, loc: actor.loc}}
       return action.id ? Action.findByIdAndUpdate(action.id, actionProperties, {new: true}) : Action.create(actionProperties)
     }))
     

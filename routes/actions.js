@@ -1,9 +1,7 @@
 const router = require('koa-router')({
   prefix: '/actions'
 })
-const utils = require('../utils')
-const apiRender = utils.apiRender
-const searchCriteria = utils.searchCriteria
+const {apiRender, apiRenderCsv, searchCriteria} = require('../utils')
 
 const Action = require('../models/action')
 
@@ -51,7 +49,8 @@ router
 
     switch (format) {
       case 'csv':
-        apiRenderCsv(ctx, actions.map(action => action.toCsv()))
+        // Need a better implementation
+        apiRenderCsv(ctx, actions)
         break
       default:
         apiRender(ctx, actions)
