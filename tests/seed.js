@@ -34,8 +34,8 @@ async function actors (db) {
 }
 
 async function seed () {
-  const client = await MongoClient.connect('mongodb://localhost')
-  const db = await client.db('eac')
+  const client = await MongoClient.connect('mongodb://localhost:27017/eac', { useNewUrlParser: true })
+  const db = await client.db()
   await schools(db)
   await actors(db)
   client.close()
