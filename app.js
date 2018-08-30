@@ -10,6 +10,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/eac')
 app.use(cors({origin: '*'}))
 app.use(bodyParser())
 
+app.use(require('./routes/actions').routes())
 app.use(require('./routes/actors').routes())
 app.use(require('./routes/domains').routes())
 app.use(require('./routes/schools').routes())

@@ -22,6 +22,14 @@ class Actor {
     if (typeof (latLng) === 'string') latLng = latLng.split(',').map(v => Number(v))
     this.distance = utils.distance(latLng, this.loc.coordinates)
   }
+  toCsv () {
+    const actor = this._doc
+    actor.location = actor.loc && actor.loc.coordinates.join(',')
+    actor.editUrl = `https://www.education-artistique-culturelle.fr/actor/${actor._id}/edit`
+    delete actor.id
+    delete actor.loc
+    return actor
+  }
 }
 
 ActorSchema.index(
