@@ -5,6 +5,10 @@ function cleanText (t) {
   return (t && t.replace(/\u0092/g, '’')) || ''
 }
 
+function removeNewlines(text) {
+  return text && text.replace(/(?:\r\n|\r|\n)/g, '\\n')
+}
+
 const ActorSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, get: cleanText },
@@ -25,7 +29,9 @@ class Actor {
   toCsv () {
     const actor = this._doc
     actor.location = actor.loc && actor.loc.coordinates.join(',')
-    actor.editUrl = `https://www.education-artistique-culturelle.fr/actor/${actor._id}/edit`
+    actor.editUrl = `https://www.education-artistique-culturelle.fr/actor/${actor._id}`
+    actor.description = removeNewlines(actor.description)
+    actor.timetable = removeNewlines(actor.timetable)
     delete actor.id
     delete actor.loc
     return actor
