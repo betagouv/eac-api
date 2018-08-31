@@ -42,9 +42,11 @@ router
         actor.location = location
       })
       actors.sort((a, b) => a.distance - b.distance)
-      actors = actors.splice(0, limit)
+      if (limit !== -1) {
+        actors = actors.splice(0, limit)
+      }
     } else {
-      actors = await Actor.find(criteria).limit(limit)
+      actors = limit === -1 ? await Actor.find(criteria) : await Actor.find(criteria).limit(limit)
     }
 
     switch (format) {
