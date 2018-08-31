@@ -46,7 +46,7 @@ router
         actors = actors.splice(0, limit)
       }
     } else {
-      actors = await Actor.find(criteria).limit(limit === -1 ? 2**32 : limit)
+      actors = limit === -1 ? await Actor.find(criteria) : await Actor.find(criteria).limit(limit)
     }
 
     switch (format) {
