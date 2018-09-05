@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
+
 const utils = require('../utils')
+const { BaseModel } = require('../models')
+
 
 const ActionSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -12,13 +15,7 @@ const ActionSchema = new mongoose.Schema({
   strict: false
 })
 
-class Action {
-  set location (latLng) {
-    if (!this.loc.coordinates[0]) return
-    if (typeof (latLng) === 'string') latLng = latLng.split(',').map(v => Number(v))
-    this.distance = utils.distance(latLng, this.loc.coordinates)
-  }
-}
+class Action extends BaseModel {}
 
 ActionSchema.index({
   name: 'text',
