@@ -1,5 +1,5 @@
 const router = require('koa-router')({prefix: '/domains'})
-const apiRender = require('../utils').apiRender
+const { render } = require('../renderers')
 
 const Actor = require('../models/actor')
 
@@ -10,7 +10,7 @@ router
       .filter(d => String(d) === d)
       .filter(d => d.length)
       .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-    apiRender(ctx, cleanedDomains)
+    render(ctx, cleanedDomains)
   })
 
 module.exports = router

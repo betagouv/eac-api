@@ -1,5 +1,3 @@
-const csvWriter = require('csv-write-stream')
-
 function distance (latlng1 = [], latlng2 = []) {
   const [lat1, lng1] = latlng1
   const [lat2, lng2] = latlng2
@@ -15,23 +13,6 @@ function distance (latlng1 = [], latlng2 = []) {
 
 function deg2rad (deg) {
   return deg * (Math.PI / 180)
-}
-
-function apiRender (context, body, status) {
-  context.set('Content-Type', 'application/json')
-  context.response.status = status || 200
-  context.body = JSON.stringify(body)
-}
-
-function apiRenderCsv (context, items) {
-  const stream = csvWriter()
-  items.forEach(item => {
-    stream.write(item)
-  })
-  context.set('Content-disposition', `attachment; filename=export.csv`)
-  context.statusCode = 200
-  context.body = stream
-  stream.end()
 }
 
 function isLatLngString (s) {
@@ -67,4 +48,4 @@ function searchCriteria (ctx) {
   return criteria
 }
 
-module.exports = { distance, apiRender, isLatLngString, searchCriteria, apiRenderCsv }
+module.exports = { distance, isLatLngString, searchCriteria }
