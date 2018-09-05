@@ -54,48 +54,51 @@ db.actions.find({ loc: null }).forEach(action => {
   }
 })
 
+// Managing domains
+
 db.system.js.save({
-  _id: "removeDomain",
-    value: function (name) {
-      print(`> Removing domain "${name}"`)
-      return db.actors.updateMany(
-        { domains: { $in: [name] } },
-        { $pull: { domains: name } }
-      )
-    }
+  _id: 'removeDomain',
+  value (name) {
+    print(`> Removing domain "${name}"`)
+    return db.actors.updateMany(
+      { domains: { $in: [name] } },
+      { $pull: { domains: name } }
+    )
+  }
 })
 db.system.js.save({
-  _id: "replaceDomain",
-    value: function (oldName, newName) {
-      print(`> Replacing domain "${oldName}" with "${newName}"`)
-      return db.actors.updateMany(
-        { domains: { $in: [oldName] } },
-        { $pull: { domains: {$in: [oldName, newName]} } },
-        { $push: { domains: newName } }
-      )
-    }
+  _id: 'replaceDomain',
+  value (oldName, newName) {
+    print(`> Replacing domain "${oldName}" with "${newName}"`)
+    return db.actors.updateMany(
+      { domains: { $in: [oldName] } },
+      { $pull: { domains: {$in: [oldName, newName]} } },
+      { $push: { domains: newName } }
+    )
+  }
 })
 db.system.js.save({
-  _id: "addDomain",
-    value: function (words, domain) {
-      print(`> Adding domain "${domain}" where title has "${words.join(', ')}"`)
-      return db.actors.updateMany(
-        {name: { $regex: words.join('|'), $options: 'i'}},
-        { $push: { domains: domain } }
-      )
-    }
+  _id: 'addDomain',
+  value (words, domain) {
+    print(`> Adding domain "${domain}" where title has "${words.join(', ')}"`)
+    return db.actors.updateMany(
+      {
+        name: { $regex: words.join('|'), $options: 'i'},
+        domains: { $nin: [domain] }
+      },
+      { $push: { domains: domain } }
+    )
+  }
 })
 
 print('Cleaning domains')
 db.loadServerScripts()
 
-db.actors.updateMany(
-  { domains: '' },
-  { $set: { domains: [] }}
-)
+db.actors.updateMany({ domains: '' }, { $set: { domains: [] }})
 
 removeDomain('Risques majeurs')
 removeDomain('Art')
+
 replaceDomain('Écriture', 'Livres')
 replaceDomain('Lecture', 'Livres')
 replaceDomain('Littérature', 'Livres')
@@ -109,9 +112,15 @@ replaceDomain('Spectacle vivant', 'Théâtre')
 replaceDomain('Spectacle vivant', 'Théâtre')
 replaceDomain('Arts appliqués', 'Arts plastiques')
 replaceDomain('Expression dramatique', 'Théâtre')
+
 addDomain(['musée', 'musee'], 'Musée')
 addDomain(['theatre', 'théatre', 'théâtre'], 'Théâtre')
 addDomain(['opéra', 'opera'], 'Opéra')
-
+addDomain(['bibliothèque', 'médiathèque', 'livre', 'lecture', 'écriture'], 'Livres')
+addDomain(['video', 'vidéo', 'cinema', 'cinéma', 'film'], 'Arts visuels')
+addDomain(['numerique', 'numérique'], 'Arts numériques')
+addDomain(['danse'], 'Danse')
+addDomain(['philosophie'], 'Philosophie')
+addDomain(['écolo', 'ecolo'], 'Développement durable')
 
 print('Done 🎊')
