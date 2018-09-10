@@ -25,9 +25,4 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "SO:ME:FIN:G:ER:PR:IN:T"
-    requires:
-      - build
-    filters:
-      branches:
-        only: master
+            - "12:7f:90:a4:10:4e:f9:91:84:b8:de:ea:7e:51:f8:58"
