@@ -28,16 +28,6 @@ router
     apiRender(ctx, actions)
   })
 
-  .get('/:id', async ctx => {
-    const action = await Action.findOne({ _id: ctx.params.id }).populate('actorId')
-    action._doc.actor = action.actorId // actorId should be called "actor"!
-    delete action._doc.actorId
-    if (ctx.request.query.from) {
-      action.location = ctx.request.query.from
-    }
-    apiRender(ctx, action)
-  })
-
   .get('/search/:q*', async ctx => {
     const from = ctx.request.query.from
     const location = from && from.split(',').map(v => Number(v))
@@ -66,6 +56,16 @@ router
       default:
         apiRender(ctx, actions)
     }
+  })
+  
+  .get('/:id', async ctx => {
+    const action = await Action.findOne({ _id: ctx.params.id }).populate('actorId')
+    action._doc.actor = action.actorId // actorId should be called "actor"!
+    delete action._doc.actorId
+    if (ctx.request.query.from) {
+      action.location = ctx.request.query.from
+    }
+    apiRender(ctx, action)
   })
 
 module.exports = router
