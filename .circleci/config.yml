@@ -21,7 +21,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       # run tests!
       - run: npm test
-deploy:
+  deploy:
     steps:
       - add_ssh_keys:
           fingerprints:
