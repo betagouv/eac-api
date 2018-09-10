@@ -22,7 +22,26 @@ jobs:
       # run tests!
       - run: npm test
   deploy:
+    docker:
+      - image: circleci/node:10.4
     steps:
+      - checkout
       - add_ssh_keys:
           fingerprints:
             - "12:7f:90:a4:10:4e:f9:91:84:b8:de:ea:7e:51:f8:58"
+      - run:
+        name: clever deploy
+        command: |
+          git remote add clever git+ssh://git@push-par-clevercloud-customers.services.clever-cloud.com/app_8327b709-789f-4bc7-abfe-f72e82a9651c.git
+          git push clever master 
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build-job
+          filters:
+            branches:
+              only: master
