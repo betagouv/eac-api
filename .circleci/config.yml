@@ -32,8 +32,8 @@ jobs:
       - run:
           name: clever deploy
           command: |
-            ssh-keyscan -H push-par-clevercloud-customers.services.clever-cloud.com >> ~/.ssh/known_hosts
-            git remote add clever git+ssh://git@push-par-clevercloud-customers.services.clever-cloud.com/app_8327b709-789f-4bc7-abfe-f72e82a9651c.git
+            ssh-keyscan -H $CLEVER_KNWON_HOST >> ~/.ssh/known_hosts
+            git remote add clever $CLEVER_REMOTE
             git push clever master 
 workflows:
   version: 2
