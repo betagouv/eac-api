@@ -1,7 +1,7 @@
 const MongoClient = require('mongodb').MongoClient
 
 // Form "Museum municipal des  cinémas 9°" to "musee des cinemas"
-function fuzzify(str) {
+function fuzzify (str) {
   if (!str) {
     return ''
   }
@@ -16,7 +16,7 @@ function fuzzify(str) {
 }
 
 // Check for fuzzy dups (beware, dragons)
-function isDup(actor) {
+function isDup (actor) {
   // All names are fuzzified...
   let names = actor.items.filter(a => a).map(a => fuzzify(a.name))
   // ... and truncated to the shortest name ...
@@ -27,56 +27,52 @@ function isDup(actor) {
   return names.every((val, _i, arr) => val === arr[0])
 }
 
-// Compare sources of two 
-function bestSource(actors) {
+// Compare sources of two
+function bestSource (actors) {
   const orderedSources = ['eac_website', 'acteurs_actions_manuel', 'joconde', 'canope', 'direction_culture_cannes']
   return actors.sort((x, y) => orderedSources.indexOf(x.source || '') - orderedSources.indexOf(y.source || ''))[0]
 }
 
-// Check if an actor was updated or created recently 
-function isNewer(source, target) {
-  return
+// Check if an actor was updated or created recently
+function isNewer (source, target) {
   // Only source was updated ...
-  (source.updatedAt && !target.updateAt)
+  return (source.updatedAt && !target.updateAt) ||
   // ... or source and taget where updated and source is newer ...
-  ||
-  (source.updatedAt && source.updatedAt > target.updateAt)
+  (source.updatedAt && source.updatedAt > target.updateAt) ||
   // ... or source has createdAt value but not the target (and the target was not updated) ...
-  ||
-  (source.createdAt && !target.updateAt && !target.createdAt)
+  (source.createdAt && !target.updateAt && !target.createdAt) ||
   // ... or source and taget has createdAt value and source is newer
-  ||
   (source.updatedAt && !target.updateAt && source.updatedAt > target.updateAt)
 }
 
-function removeEmptyValues(o) {
+function removeEmptyValues (o) {
   Object.keys(o).forEach((key) => (o[key] == null) && delete o[key])
   return o
 }
 
-async function actorsDup(db, group) {
+async function actorsDup (db, group) {
   return (await db.collection('actors').aggregate([{
-      '$group': {
-        _id: group,
-        count: {
-          $sum: 1
-        },
-        items: {
-          $push: '$$ROOT'
-        }
-      }
-    },
-    {
-      '$match': {
-        count: {
-          $gt: 1
-        }
+    '$group': {
+      _id: group,
+      count: {
+        $sum: 1
+      },
+      items: {
+        $push: '$$ROOT'
       }
     }
+  },
+  {
+    '$match': {
+      count: {
+        $gt: 1
+      }
+    }
+  }
   ]).toArray()).filter(a => a.count > 1 && isDup(a))
 }
 
-async function deDup(db, actorsWithDup) {
+async function deDup (db, actorsWithDup) {
   // Recreate actors with more accurate values
   const newActors = actorsWithDup.map(actor => {
     return actor.items.reduce((acc, val) => {
@@ -107,7 +103,7 @@ async function deDup(db, actorsWithDup) {
 }
 
 // Main async func (beacause await)
-async function updateDb() {
+async function updateDb () {
   const client = await MongoClient.connect(process.argv[2], {
     useNewUrlParser: true
   })
@@ -116,7 +112,7 @@ async function updateDb() {
   await deDup(db, await actorsDup(db, '$loc.coordinates'))
   await deDup(db, await actorsDup(db, {
     coordinates: '$loc.coordinates',
-    name: '$name',
+    name: '$name'
   }))
 
   await client.close()

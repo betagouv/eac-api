@@ -5,7 +5,7 @@ function cleanText (t) {
   return (t && t.replace(/\u0092/g, '’')) || ''
 }
 
-function removeNewlines(text) {
+function removeNewlines (text) {
   return text && text.replace(/(?:\r\n|\r|\n)/g, '\\n')
 }
 

@@ -57,7 +57,7 @@ router
         apiRender(ctx, actions)
     }
   })
-  
+
   .get('/:id', async ctx => {
     const action = await Action.findOne({ _id: ctx.params.id }).populate('actorId')
     action._doc.actor = action.actorId // actorId should be called "actor"!

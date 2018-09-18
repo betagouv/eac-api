@@ -28,7 +28,7 @@ const actors = xlsx.utils.sheet_to_json(workbook.Sheets['acteurs']).filter(v => 
     source: 'acteurs_actions_manuel',
     url: actor.website,
     labels: actor.labels && actor.labels.split(',').map(v => v.trim()),
-    department: String(actor['postalCode*']).slice(0,2), // department
+    department: String(actor['postalCode*']).slice(0, 2), // department
     actions: actions.filter(r => r['(actorId)'] === actor['(id)']).map(trimAll).map(action => {
       return {
         id: uuidv4(),
@@ -48,7 +48,7 @@ const actors = xlsx.utils.sheet_to_json(workbook.Sheets['acteurs']).filter(v => 
         status: action.status,
         school: action.school,
         cost: action.cost,
-        source: 'acteurs_actions_manuel',
+        source: 'acteurs_actions_manuel'
       }
     }),
     createdAt: new Date()

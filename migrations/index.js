@@ -1,4 +1,4 @@
-/* globals db */
+/* globals db, print, removeDomain, addDomain, replaceDomain */
 
 print('Get all actors having actions, then create a document for each and unset actions in actors.')
 db.actors.find({ 'actions.0': { $exists: true } }).forEach(actor => {
@@ -83,7 +83,7 @@ db.system.js.save({
     print(`> Adding domain "${domain}" where title has "${words.join(', ')}"`)
     return db.actors.updateMany(
       {
-        name: { $regex: words.join('|'), $options: 'i'},
+        name: { $regex: words.join('|'), $options: 'i' },
         domains: { $nin: [domain] }
       },
       { $push: { domains: domain } }
@@ -94,7 +94,7 @@ db.system.js.save({
 print('Cleaning domains')
 db.loadServerScripts()
 
-db.actors.updateMany({ domains: '' }, { $set: { domains: [] }})
+db.actors.updateMany({ domains: '' }, { $set: { domains: [] } })
 
 removeDomain('Risques majeurs')
 removeDomain('Art')
