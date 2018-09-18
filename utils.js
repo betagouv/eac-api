@@ -60,7 +60,7 @@ function searchCriteria (ctx) {
     const location = from.split(',').map(v => Number(v))
     criteria.loc = {
       $geoWithin: {
-        $centerSphere: [location, distance / 3963.2]
+        $centerSphere: [location, distance / 6378.15]
       }
     }
   }
