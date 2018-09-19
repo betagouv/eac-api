@@ -15,12 +15,12 @@
     "url": "git+https://github.com/betagouv/eac-api.git"
   },
   "dependencies": {
-    "@koa/cors": "^2.2.1",
-    "koa": "^2.5.1",
+    "@koa/cors": "^2.2.2",
+    "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
-    "mongoose": "^5.1.7",
-    "nodemon": "^1.17.5"
+    "mongoose": "^5.2.15",
+    "nodemon": "^1.18.4"
   },
   "devDependencies": {
     "csv-parse": "^2.5.0",
@@ -28,12 +28,12 @@
     "csv-write-stream": "^2.0.0",
     "epsg-index": "^0.14.0",
     "get-stream": "^3.0.0",
-    "iconv-lite": "^0.4.23",
-    "jest": "^23.2.0",
-    "mongodb": "^3.1.1",
-    "proj4": "^2.4.4",
-    "request": "^2.87.0",
-    "supertest": "^3.1.0",
-    "xlsx": "^0.13.2"
+    "iconv-lite": "^0.4.24",
+    "jest": "^23.6.0",
+    "mongodb": "^3.1.6",
+    "proj4": "^2.5.0",
+    "request": "^2.88.0",
+    "supertest": "^3.3.0",
+    "xlsx": "^0.13.5"
   }
 }
