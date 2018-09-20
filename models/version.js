@@ -8,8 +8,6 @@ const VersionSchema = new mongoose.Schema({
 })
 
 class Version {}
-
-VersionSchema.index({ name: 'text', city: 'text' })
 VersionSchema.loadClass(Version)
 
 module.exports = mongoose.model('Version', VersionSchema)
