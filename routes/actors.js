@@ -1,14 +1,15 @@
 const router = require('koa-router')({
   prefix: '/actors'
 })
-const {apiRender, apiRenderCsv, searchCriteria} = require('../utils')
+const { searchCriteria } = require('../utils')
+const { render, renderJson } = require('../renderers')
 const Actor = require('../models/actor')
 const Action = require('../models/action')
 
 router
   .get('/', async ctx => {
     const actors = await Actor.find().limit(100)
-    apiRender(ctx, actors)
+    render(ctx, actors)
   })
 
   .post('/', async ctx => {
@@ -24,14 +25,13 @@ router
       _id: ctx.params.id
     })
     await Action.find({ actorId: ctx.params.id }).remove()
-    apiRender(ctx, actor)
+    renderJson(ctx, actor)
   })
 
   .get('/search/:q*', async ctx => {
     const from = ctx.request.query.from
     const location = from && from.split(',').map(v => Number(v))
     const limit = Number(ctx.request.query.limit) || 100
-    const format = ctx.request.query.format || 'json'
     const criteria = searchCriteria(ctx)
 
     let actors = []
@@ -45,17 +45,12 @@ router
       if (limit !== -1) {
         actors = actors.splice(0, limit)
       }
-    } else {
+    }
+    else {
       actors = limit === -1 ? await Actor.find(criteria) : await Actor.find(criteria).limit(limit)
     }
 
-    switch (format) {
-      case 'csv':
-        apiRenderCsv(ctx, actors.map(actor => actor.toCsv()))
-        break
-      default:
-        apiRender(ctx, actors)
-    }
+    render(ctx, actors)
   })
 
   .get('/:id', async ctx => {
@@ -64,7 +59,7 @@ router
     })
     actor.actions = await Action.find({actorId: actor._id})
     actor.location = ctx.request.query.from
-    apiRender(ctx, actor)
+    renderJson(ctx, actor)
   })
 
 async function createOrUpdateActor (ctx, callback) {
@@ -86,9 +81,9 @@ async function createOrUpdateActor (ctx, callback) {
       return action.id ? Action.findByIdAndUpdate(action.id, actionProperties, {new: true}) : Action.create(actionProperties)
     }))
 
-    apiRender(ctx, actor)
+    renderJson(ctx, actor)
   } catch (e) {
-    apiRender(ctx, {
+    renderJson(ctx, {
       message: e.message
     }, 400)
   }

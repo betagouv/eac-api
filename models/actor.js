@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
+
 const utils = require('../utils')
+const { BaseModel } = require('../models')
+
 
 function cleanText (t) {
   return (t && t.replace(/\u0092/g, '’')) || ''
@@ -20,20 +23,12 @@ const ActorSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 }, {strict: false})
 
-class Actor {
-  set location (latLng) {
-    if (!this.loc.coordinates[0]) return
-    if (typeof (latLng) === 'string') latLng = latLng.split(',').map(v => Number(v))
-    this.distance = utils.distance(latLng, this.loc.coordinates)
-  }
+class Actor extends BaseModel {
   toCsv () {
-    const actor = this._doc
-    actor.location = actor.loc && actor.loc.coordinates.join(',')
-    actor.editUrl = `https://www.education-artistique-culturelle.fr/actor/${actor._id}`
+    const actor = super.toCsv()
+    actor.editUrl = `https://www.education-artistique-culturelle.fr/actor/${actor.id}`
     actor.description = removeNewlines(actor.description)
     actor.timetable = removeNewlines(actor.timetable)
-    delete actor.id
-    delete actor.loc
     return actor
   }
 }

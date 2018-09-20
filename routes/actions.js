@@ -1,7 +1,8 @@
 const router = require('koa-router')({
   prefix: '/actions'
 })
-const {apiRender, apiRenderCsv, searchCriteria} = require('../utils')
+const { searchCriteria } = require('../utils')
+const { render } = require('../renderers')
 
 const Action = require('../models/action')
 
@@ -25,7 +26,7 @@ const aggregateRules = [
 router
   .get('/', async ctx => {
     const actions = await Action.aggregate(aggregateRules).limit(100)
-    apiRender(ctx, actions)
+    render(ctx, actions)
   })
 
   .get('/search/:q*', async ctx => {
@@ -48,14 +49,7 @@ router
       actions = await Action.aggregate(criteria).limit(limit)
     }
 
-    switch (format) {
-      case 'csv':
-        // Need a better implementation
-        apiRenderCsv(ctx, actions)
-        break
-      default:
-        apiRender(ctx, actions)
-    }
+    render(ctx, actions)
   })
 
   .get('/:id', async ctx => {
