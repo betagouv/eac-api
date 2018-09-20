@@ -123,4 +123,19 @@ addDomain(['danse'], 'Danse')
 addDomain(['philosophie'], 'Philosophie')
 addDomain(['écolo', 'ecolo'], 'Développement durable')
 
+print('Update timetable for all actions with obsolete dateRange...')
+db.actions.find({ dateRange: { $ne:null } }).forEach(action => {
+  let text = [ action.timetable ]
+  if (action.dateRange[0] && action.dateRange[1]) {
+    text.push(`Disponible entre le ${action.dateRange[0]} et le ${action.dateRange[1]}`)
+  } else if (action.dateRange[0] && !action.dateRange[1]) {
+    text.push(`Débute le ${action.dateRange[0]}`)
+  } else if (!action.dateRange[0] && action.dateRange[1]) {
+    text.push(`Effective jusqu'au ${action.dateRange[1]}`)
+  }
+  text = text.filter(t => t).join('\n')
+  db.actions.update({ _id: action._id }, { $set: { timetable: text }, $unset: { dateRange: '' } })
+  print(` ...update timetable for action ${action._id} with value:\n${text}`)
+})
+
 print('Done 🎊')
