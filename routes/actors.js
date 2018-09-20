@@ -1,7 +1,7 @@
 const router = require('koa-router')({
   prefix: '/actors'
 })
-const {apiRender, apiRenderCsv, searchCriteria} = require('../utils')
+const {apiRender, apiRenderCsv, searchCriteria, version} = require('../utils')
 const Actor = require('../models/actor')
 const Action = require('../models/action')
 
@@ -16,14 +16,20 @@ router
   })
 
   .put('/:id', async ctx => {
-    await createOrUpdateActor(ctx, x => Actor.findByIdAndUpdate(ctx.params.id, x, {new: true}))
+    await createOrUpdateActor(ctx, async actor => {
+      await version('Actor', await Actor.findByIdAndUpdate(ctx.params.id, actor))
+      return Actor.findById(ctx.params.id)
+    })
   })
 
   .delete('/:id', async ctx => {
-    const actor = await Actor.deleteOne({
+    const actor = await Actor.findOneAndRemove({
       _id: ctx.params.id
     })
-    await Action.find({ actorId: ctx.params.id }).remove()
+    await version('Actor', actor)
+    const actions = await Action.find({ actorId: ctx.params.id })
+    await Action.remove({ id: { $in: actions.map(a => a.id) } })
+    await version('Action', actions)
     apiRender(ctx, actor)
   })
 
@@ -78,12 +84,20 @@ async function createOrUpdateActor (ctx, callback) {
     // Remove deleted actions.
     const existingActionsIds = (await Action.find({actorId: actor._id})).map(a => a.id)
     const updatedActionsIds = params.actions ? params.actions.filter(a => a.id).map(a => a.id) : []
-    await Action.remove({ id: { $in: existingActionsIds.filter(x => !updatedActionsIds.includes(x)) } })
+    const toBeRemovedActionsIds = existingActionsIds.filter(x => !updatedActionsIds.includes(x))
+    const toBeRemovedActions = await Action.find({ id: { $in: toBeRemovedActionsIds } })
+    await Action.remove({ id: { $in: toBeRemovedActionsIds } })
+    await version('Action', toBeRemovedActions)
 
     // Update existing actions and create new ones.
-    params.actions && await Promise.all(params.actions.map(action => {
+    params.actions && await Promise.all(params.actions.map(async action => {
       const actionProperties = {...action, ...{actorId: actor._id, loc: actor.loc}}
-      return action.id ? Action.findByIdAndUpdate(action.id, actionProperties, {new: true}) : Action.create(actionProperties)
+      if (!action.id) {
+        return Action.create(actionProperties)
+      } else {
+        const actionBeforeUpdate = await Action.findByIdAndUpdate(action.id, actionProperties)
+        return version('Action', actionBeforeUpdate)
+      }
     }))
 
     apiRender(ctx, actor)
