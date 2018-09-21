@@ -124,14 +124,21 @@ addDomain(['philosophie'], 'Philosophie')
 addDomain(['écolo', 'ecolo'], 'Développement durable')
 
 print('Update timetable for all actions with obsolete dateRange...')
+
+const toFrDate = date => {
+  date = new Date(date)
+  return `${('0' + date.getDate()).slice(-2)}/${('0' + (date.getMonth()+1)).slice(-2)}/${date.getFullYear()}`
+}
+
 db.actions.find({ dateRange: { $ne:null } }).forEach(action => {
+  const dr = action.dateRange
   let text = [ action.timetable ]
-  if (action.dateRange[0] && action.dateRange[1]) {
-    text.push(`Disponible entre le ${action.dateRange[0]} et le ${action.dateRange[1]}`)
-  } else if (action.dateRange[0] && !action.dateRange[1]) {
-    text.push(`Débute le ${action.dateRange[0]}`)
-  } else if (!action.dateRange[0] && action.dateRange[1]) {
-    text.push(`Effective jusqu'au ${action.dateRange[1]}`)
+  if (dr[0] && dr[1]) {
+    text.push(`Disponible entre le ${toFrDate(dr[0])} et le ${toFrDate(dr[1])}`)
+  } else if (dr[0] && !dr[1]) {
+    text.push(`Débute le ${toFrDate(dr[0])}`)
+  } else if (!dr[0] && dr[1]) {
+    text.push(`Effective jusqu'au ${toFrDate(dr[1])}`)
   }
   text = text.filter(t => t).join('\n')
   db.actions.update({ _id: action._id }, { $set: { timetable: text }, $unset: { dateRange: '' } })
