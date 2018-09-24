@@ -39,6 +39,7 @@ async function parse () {
       const x = parseFloat(r.coordonnee_x.replace(/,/g, '.'))
       const y = parseFloat(r.coordonnee_y.replace(/,/g, '.'))
       return {
+        uai: row.numero_uai,
         name: name(row),
         postalCode: row.code_postal_uai,
         city: row.localite_acheminement_uai,
