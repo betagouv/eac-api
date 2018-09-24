@@ -25,6 +25,10 @@ router
     }
   })
 
+  .get('/count', async ctx => {
+    ctx.body = await School.count()
+  })
+
   .get('/:id', async ctx => {
     const school = await School.findOne({
       _id: ctx.params.id

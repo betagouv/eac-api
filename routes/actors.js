@@ -33,6 +33,10 @@ router
     apiRender(ctx, actor)
   })
 
+  .get('/count', async ctx => {
+    ctx.body = await Actor.count()
+  })
+
   .get('/search/:q*', async ctx => {
     const from = ctx.request.query.from
     const location = from && from.split(',').map(v => Number(v))
