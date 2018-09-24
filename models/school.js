@@ -6,7 +6,15 @@ const SchoolSchema = new mongoose.Schema({
   loc: { type: Object, index: '2dsphere' }
 })
 
-class School {}
+class School {
+  toCsv () {
+    const school = this._doc
+    school.location = school.loc && school.loc.coordinates.join(',')
+    delete school.id
+    delete school.loc
+    return school
+  }
+}
 
 SchoolSchema.index({ name: 'text', city: 'text' })
 SchoolSchema.loadClass(School)
