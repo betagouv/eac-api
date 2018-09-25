@@ -1,5 +1,7 @@
 const csvWriter = require('csv-write-stream')
 const Version = require('./models/version')
+const { departmentFromPostalCode } = require('./mongoutils')
+
 
 function distance (latlng1 = [], latlng2 = []) {
   const [lat1, lng1] = latlng1
@@ -74,4 +76,6 @@ function version(model, objects) {
   }))
 }
 
-module.exports = { distance, apiRender, isLatLngString, searchCriteria, apiRenderCsv, version }
+module.exports = {
+  distance, apiRender, isLatLngString, searchCriteria, apiRenderCsv, version,
+  departmentFromPostalCode }

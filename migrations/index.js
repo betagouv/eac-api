@@ -1,4 +1,5 @@
 /* globals db, print, removeDomain, addDomain, replaceDomain */
+load(`${pwd()}/mongoutils.js`)
 
 print('Get all actors having actions, then create a document for each and unset actions in actors.')
 db.actors.find({ 'actions.0': { $exists: true } }).forEach(actor => {
@@ -144,11 +145,6 @@ db.actions.find({ dateRange: { $ne:null } }).forEach(action => {
   db.actions.update({ _id: action._id }, { $set: { timetable: text }, $unset: { dateRange: '' } })
   print(` ...update timetable for action ${action._id} with value:\n${text}`)
 })
-
-function departmentFromPostalCode (postalCode) {
-  const postalPrefix = postalCode.slice(0, -3)
-  return postalPrefix.length < 2 ? `0${postalPrefix}` : postalPrefix
-}
 
 print('Creating departments for schools')
 db.schools.find({ postalCode: { $exists: true } }).forEach(school => {
