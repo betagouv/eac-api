@@ -1,10 +1,17 @@
 const mongoose = require('mongoose')
+const { departmentOnSave } = require('../signals')
+const { PostalCode, Department } = require('../schematypes')
+
 
 const SchoolSchema = new mongoose.Schema({
   name: { type: String, required: true },
   city: String,
-  loc: { type: Object, index: '2dsphere' }
+  loc: { type: Object, index: '2dsphere' },
+  postalCode: PostalCode,
+  department: Department
 })
+
+departmentOnSave(SchoolSchema)
 
 class School {
   toCsv () {

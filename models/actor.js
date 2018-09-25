@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 const utils = require('../utils')
+const { departmentOnSave } = require('../signals')
+const { PostalCode, Department } = require('../schematypes')
+
 
 function cleanText (t) {
   return (t && t.replace(/\u0092/g, '’')) || ''
@@ -11,6 +14,8 @@ function removeNewlines (text) {
 
 const ActorSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  postalCode: PostalCode,
+  department: Department,
   description: { type: String, get: cleanText },
   loc: { type: Object, index: '2dsphere' },
   domains: Array,
@@ -19,6 +24,8 @@ const ActorSchema = new mongoose.Schema({
   actions: Array,
   createdAt: { type: Date, default: Date.now }
 }, {strict: false})
+
+departmentOnSave(ActorSchema)
 
 class Actor {
   set location (latLng) {
