@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const utils = require('../utils')
-const { departmentOnSave } = require('../signals')
+const { cleanPostalCode, departmentOnSave } = require('../signals')
 const { PostalCode, Department } = require('../schematypes')
 
 
@@ -25,6 +25,7 @@ const ActorSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 }, {strict: false})
 
+cleanPostalCode(ActorSchema)
 departmentOnSave(ActorSchema)
 
 class Actor {

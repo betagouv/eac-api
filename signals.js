@@ -7,4 +7,14 @@ function departmentOnSave(schema) {
   })
 }
 
-module.exports = { departmentOnSave }
+function cleanPostalCode(schema) {
+  schema.pre('save', function (next) {
+    this.postalCode = this.postalCode.trim()
+    if (this.postalCode && this.postalCode.length === 4) {
+      this.postalCode = `0${this.postalCode}`
+    }
+    next()
+  })
+}
+
+module.exports = { departmentOnSave, cleanPostalCode }
