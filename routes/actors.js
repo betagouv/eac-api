@@ -2,6 +2,7 @@ const router = require('koa-router')({
   prefix: '/actors'
 })
 const {apiRender, apiRenderCsv, searchCriteria, version} = require('../utils')
+const { allowDepartmentsFilter } = require('../query')
 const Actor = require('../models/actor')
 const Action = require('../models/action')
 
@@ -34,7 +35,8 @@ router
   })
 
   .get('/count', async ctx => {
-    ctx.body = await Actor.count()
+    const criteria = allowDepartmentsFilter(ctx)
+    ctx.body = await Actor.count(criteria)
   })
 
   .get('/search/:q*', async ctx => {

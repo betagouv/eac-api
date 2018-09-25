@@ -1,5 +1,6 @@
 const router = require('koa-router')({prefix: '/schools'})
 const {apiRender, apiRenderCsv} = require('../utils')
+const { allowDepartmentsFilter } = require('../query')
 
 const School = require('../models/school')
 
@@ -26,7 +27,8 @@ router
   })
 
   .get('/count', async ctx => {
-    ctx.body = await School.count()
+    const criteria = allowDepartmentsFilter(ctx)
+    ctx.body = await School.count(criteria)
   })
 
   .get('/:id', async ctx => {
