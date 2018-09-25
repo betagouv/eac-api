@@ -28,6 +28,10 @@ router
     apiRender(ctx, actions)
   })
 
+  .get('/count', async ctx => {
+    ctx.body = await Action.count()
+  })
+
   .get('/search/:q*', async ctx => {
     const from = ctx.request.query.from
     const location = from && from.split(',').map(v => Number(v))
