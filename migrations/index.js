@@ -145,4 +145,20 @@ db.actions.find({ dateRange: { $ne:null } }).forEach(action => {
   print(` ...update timetable for action ${action._id} with value:\n${text}`)
 })
 
+function departmentFromPostalCode (postalCode) {
+  const postalPrefix = postalCode.slice(0, -3)
+  return postalPrefix.length < 2 ? `0${postalPrefix}` : postalPrefix
+}
+
+print('Creating departments for schools')
+db.schools.find({ postalCode: { $exists: true } }).forEach(school => {
+  const department = departmentFromPostalCode(school.postalCode)
+  db.schools.update({ _id: school._id }, { $set: {department } })
+})
+print('Creating departments for actors')
+db.actors.find({ postalCode: { $exists: true } }).forEach(actor => {
+  const department = departmentFromPostalCode(actor.postalCode)
+  db.actors.update({ _id: actor._id }, { $set: { department } })
+})
+
 print('Done 🎊')
