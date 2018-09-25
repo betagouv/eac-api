@@ -146,6 +146,11 @@ db.actions.find({ dateRange: { $ne:null } }).forEach(action => {
   print(` ...update timetable for action ${action._id} with value:\n${text}`)
 })
 
+function departmentFromPostalCode (postalCode) {
+  const postalPrefix = postalCode.slice(0, -3)
+  return postalPrefix.length < 2 ? `0${postalPrefix}` : postalPrefix
+}
+
 print('Creating departments for schools')
 db.schools.find({ postalCode: { $exists: true } }).forEach(school => {
   const department = departmentFromPostalCode(school.postalCode)
