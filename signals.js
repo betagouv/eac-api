@@ -13,8 +13,5 @@ function cleanPostalCode(schema) {
     if (this.postalCode && this.postalCode.length === 4) {
       this.postalCode = `0${this.postalCode}`
     }
-    next()
-  })
-}
 
 module.exports = { departmentOnSave, cleanPostalCode }
