@@ -35,7 +35,7 @@ router
   .get('/search/:q*', async ctx => {
     const from = ctx.request.query.from
     const location = from && from.split(',').map(v => Number(v))
-    const limit = Number(ctx.request.query.limit) || 100
+    const limit = Number(ctx.request.query.limit) || 30
     const format = ctx.request.query.format || 'json'
     const criteria = [{$match: searchCriteria(ctx)}, ...aggregateRules]
 

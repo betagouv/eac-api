@@ -37,6 +37,14 @@ function apiRenderCsv (context, items) {
   stream.end()
 }
 
+function renderFormat (context, items) {
+  if (context.request.query.format === 'csv') {
+    apiRenderCsv(context, items)
+  } else {
+    apiRender(context, items)
+  }
+}
+
 function isLatLngString (s) {
   return s.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/)
 }
@@ -78,4 +86,4 @@ function version(model, objects) {
 
 module.exports = {
   distance, apiRender, isLatLngString, searchCriteria, apiRenderCsv, version,
-  departmentFromPostalCode }
+  departmentFromPostalCode, renderFormat }
