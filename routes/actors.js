@@ -1,15 +1,16 @@
 const router = require('koa-router')({
   prefix: '/actors'
 })
-const {apiRender, apiRenderCsv, searchCriteria, version} = require('../utils')
+const { apiRender, renderFormat, searchCriteria, version } = require('../utils')
 const { allowDepartmentsFilter } = require('../query')
 const Actor = require('../models/actor')
 const Action = require('../models/action')
 
 router
   .get('/', async ctx => {
-    const actors = await Actor.find().limit(100)
-    apiRender(ctx, actors)
+    const criteria = allowDepartmentsFilter(ctx)
+    const actors = await Actor.find(criteria).limit(Number(ctx.request.query.limit) || 30)
+    renderFormat(ctx, actors)
   })
 
   .post('/', async ctx => {
@@ -42,7 +43,7 @@ router
   .get('/search/:q*', async ctx => {
     const from = ctx.request.query.from
     const location = from && from.split(',').map(v => Number(v))
-    const limit = Number(ctx.request.query.limit) || 100
+    const limit = Number(ctx.request.query.limit) || 30
     const format = ctx.request.query.format || 'json'
     const criteria = searchCriteria(ctx)
 
@@ -60,14 +61,7 @@ router
     } else {
       actors = limit === -1 ? await Actor.find(criteria) : await Actor.find(criteria).limit(limit)
     }
-
-    switch (format) {
-      case 'csv':
-        apiRenderCsv(ctx, actors.map(actor => actor.toCsv()))
-        break
-      default:
-        apiRender(ctx, actors)
-    }
+    renderFormat(ctx, actors)
   })
 
   .get('/:id', async ctx => {
