@@ -6,7 +6,7 @@
   "scripts": {
     "start": "DEBUG=koa* nodemon --inspect server.js",
     "debug": "nodemon inspect server.js",
-    "test": "node tests/seed.js && jest --forceExit"
+    "test": "export MONGODB_URI=mongodb://localhost:27017/eac-test && node tests/seed.js && jest --forceExit"
   },
   "author": "BetaGouv",
   "license": "MIT",
