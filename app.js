@@ -5,7 +5,7 @@ const bodyParser = require('koa-bodyparser')
 const app = new Koa()
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/eac')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/eac', { useNewUrlParser: true, useCreateIndex: true })
 
 app.use(cors({origin: '*'}))
 app.use(bodyParser())
@@ -14,6 +14,7 @@ app.use(require('./routes/actions').routes())
 app.use(require('./routes/actors').routes())
 app.use(require('./routes/domains').routes())
 app.use(require('./routes/schools').routes())
+app.use(require('./routes/auth').routes())
 
 app.use(router.routes())
 
