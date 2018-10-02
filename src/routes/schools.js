@@ -5,10 +5,10 @@ const { allowDepartmentsFilter } = require('../query')
 const School = require('../models/school')
 
 router
-  .get('/', async (req, res) => {  // FIX
-    const criteria = allowDepartmentsFilter(req)  // FIX
+  .get('/', async (req, res) => {
+    const criteria = allowDepartmentsFilter(req)
     const schools = await School.find(criteria).limit(Number(req.query.limit) || 30)
-    renderFormat(req, res, schools) // FIX
+    renderFormat(req, res, schools)
   })
 
   .get('/search/:q?', async (req, res) => {
@@ -22,7 +22,7 @@ router
     }
     let schools = await School.find(criteria).limit(limit)
     schools = schools.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-    renderFormat(req, res, schools)  // FIX
+    renderFormat(req, res, schools)
   })
 
   .get('/count', async (req, res) => {

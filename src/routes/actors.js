@@ -8,7 +8,7 @@ router
   .get('/', async (req, res) => {
     const criteria = allowDepartmentsFilter(req)
     const actors = await Actor.find(criteria).limit(Number(req.query.limit) || 30)
-    renderFormat(req, res, actors) // FIX
+    renderFormat(req, res, actors)
   })
 
   .post('/', async (req, res) => {
@@ -58,7 +58,7 @@ router
     } else {
       actors = limit === -1 ? await Actor.find(criteria) : await Actor.find(criteria).limit(limit)
     }
-    renderFormat(req, res, actors) // FIX
+    renderFormat(req, res, actors)
   })
 
   .get('/:id', async (req, res) => {

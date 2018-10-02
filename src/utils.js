@@ -34,7 +34,7 @@ function apiRenderCsv (res, items) {
 
 function renderFormat (req, res, items) {
   if (req.query.format === 'csv') {
-    apiRenderCsv(res, items) // FIX
+    apiRenderCsv(res, items)
   } else {
     res.send(items)
   }

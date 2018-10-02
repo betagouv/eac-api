@@ -29,14 +29,13 @@ router
   .get('/count', async (_req, res) => {
     res.send(await Action.count())
   })
-  
 
   .get('/search/:q?', async (req, res) => {
     const from = req.query.from
     const location = from && from.split(',').map(v => Number(v))
     const limit = Number(req.query.limit) || 30
     const format = req.query.format || 'json'
-    const criteria = [{$match: searchCriteria(req)}, ...aggregateRules] // FIX
+    const criteria = [{$match: searchCriteria(req)}, ...aggregateRules]
 
     let actions = []
 
@@ -54,11 +53,11 @@ router
     switch (format) {
       case 'csv':
         // Need a better implementation
-        apiRenderCsv(res, actions) // FIX
+        apiRenderCsv(res, actions)
         break
       default:
         res.send(actions)
-    }    
+    }
   })
 
   .get('/:id', async (req, res) => {
