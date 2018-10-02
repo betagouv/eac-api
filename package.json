@@ -2,11 +2,11 @@
   "name": "eac-api",
   "version": "1.0.0",
   "description": "API for EAC project",
-  "main": "app.js",
+  "main": "./src/app.js",
   "scripts": {
-    "start": "DEBUG=koa* nodemon --inspect server.js",
-    "debug": "nodemon inspect server.js",
-    "test": "export MONGODB_URI=mongodb://localhost:27017/eac-test && node tests/seed.js && jest --forceExit"
+    "start": "DEBUG=koa* nodemon --inspect src/server.js",
+    "debug": "nodemon inspect src/server.js",
+    "test": "export MONGODB_URI=mongodb://localhost:27017/eac-test && node src/tests/seed.js && jest --forceExit"
   },
   "author": "BetaGouv",
   "license": "MIT",
