@@ -1,21 +1,19 @@
-const Koa = require('koa')
-const router = require('koa-router')()
-const cors = require('@koa/cors')
-const bodyParser = require('koa-bodyparser')
-const app = new Koa()
+const express = require('express')
+const cors = require('cors')
+const bodyParser = require('body-parser')
+const app = express()
 
 const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/eac', { useNewUrlParser: true, useCreateIndex: true })
 
-app.use(cors({origin: '*'}))
-app.use(bodyParser())
+app.use(cors())
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
 
-app.use(require('./routes/actions').routes())
-app.use(require('./routes/actors').routes())
-app.use(require('./routes/domains').routes())
-app.use(require('./routes/schools').routes())
-app.use(require('./routes/auth').routes())
-
-app.use(router.routes())
+app.use('/actions', require('./routes/actions'))
+app.use('/actors', require('./routes/actors'))
+app.use('/domains', require('./routes/domains'))
+app.use('/schools', require('./routes/schools'))
+app.use('/auth', require('./routes/auth'))
 
 module.exports = app

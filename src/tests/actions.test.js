@@ -15,7 +15,7 @@ describe('Test actions', async () => {
   let actorId
 
   test(`Create an actor with action ${actorsUrl}`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .post(actorsUrl)
       .send(params)
       .set('Accept', 'application/json')
@@ -27,7 +27,7 @@ describe('Test actions', async () => {
   })
 
   test(`Get an actor with actions ${actorsUrl}/${actorId}`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .get(`${actorsUrl}/${actorId}`)
       .set('Accept', 'application/json')
       .expect(200)
@@ -38,7 +38,7 @@ describe('Test actions', async () => {
   })
 
   test(`Get all actions ${actionsUrl}`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .get(`${actionsUrl}`)
       .set('Accept', 'application/json')
       .expect(200)
@@ -47,7 +47,7 @@ describe('Test actions', async () => {
   })
 
   test(`Search for actions #1 ${actionsUrl}/search/?from=1,2`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .get(`${actionsUrl}/search/?from=1,2`)
       .set('Accept', 'application/json')
       .expect(200)
@@ -55,7 +55,7 @@ describe('Test actions', async () => {
   })
 
   test(`Search for actions #2 ${actionsUrl}/search/spectacle?from=1,2`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .get(`${actionsUrl}/search/spectacle?from=1,2`)
       .set('Accept', 'application/json')
       .expect(200)
@@ -65,7 +65,7 @@ describe('Test actions', async () => {
   })
 
   test(`Search for actions #3 ${actionsUrl}/search?from=1,2&limit=1`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .get(`${actionsUrl}/search?from=1,2&limit=1`)
       .set('Accept', 'application/json')
       .expect(200)

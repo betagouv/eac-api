@@ -1,20 +1,20 @@
-const router = require('koa-router')({prefix: '/schools'})
-const { apiRender, renderFormat } = require('../utils')
+const router = require('express').Router()
+const { renderFormat } = require('../utils')
 const { allowDepartmentsFilter } = require('../query')
 
 const School = require('../models/school')
 
 router
-  .get('/', async (ctx) => {
-    const criteria = allowDepartmentsFilter(ctx)
-    const schools = await School.find(criteria).limit(Number(ctx.request.query.limit) || 30)
-    renderFormat(ctx, schools)
+  .get('/', async (req, res) => {  // FIX
+    const criteria = allowDepartmentsFilter(req)  // FIX
+    const schools = await School.find(criteria).limit(Number(req.query.limit) || 30)
+    renderFormat(req, res, schools) // FIX
   })
 
-  .get('/search/:q*', async ctx => {
+  .get('/search/:q?', async (req, res) => {
     // Perform a _logical AND_ search
-    const words = ctx.params.q
-    const limit = Number(ctx.request.query.limit) || 20
+    const words = req.params.q
+    const limit = Number(req.query.limit) || 20
     const criteria = !words ? {} : {
       $text: {
         $search: words.replace(/\s+/, ' ').split(' ').map(w => `"${w}"`).join(' ')
@@ -22,19 +22,19 @@ router
     }
     let schools = await School.find(criteria).limit(limit)
     schools = schools.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-    renderFormat(ctx, schools)
+    renderFormat(req, res, schools)  // FIX
   })
 
-  .get('/count', async ctx => {
-    const criteria = allowDepartmentsFilter(ctx)
-    ctx.body = await School.count(criteria)
+  .get('/count', async (req, res) => {
+    const criteria = allowDepartmentsFilter(req)
+    res.send(await School.count(criteria))
   })
 
-  .get('/:id', async ctx => {
+  .get('/:id', async (req, res) => {
     const school = await School.findOne({
-      _id: ctx.params.id
+      _id: req.params.id
     })
-    apiRender(ctx, school)
+    res.send(school)
   })
 
 module.exports = router

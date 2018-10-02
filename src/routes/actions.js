@@ -1,7 +1,5 @@
-const router = require('koa-router')({
-  prefix: '/actions'
-})
-const {apiRender, apiRenderCsv, searchCriteria} = require('../utils')
+const router = require('express').Router()
+const {apiRenderCsv, searchCriteria} = require('../utils')
 
 const Action = require('../models/action')
 
@@ -23,21 +21,22 @@ const aggregateRules = [
 ]
 
 router
-  .get('/', async ctx => {
+  .get('/', async (_req, res) => {
     const actions = await Action.aggregate(aggregateRules).limit(100)
-    apiRender(ctx, actions)
+    res.send(actions)
   })
 
-  .get('/count', async ctx => {
-    ctx.body = await Action.count()
+  .get('/count', async (_req, res) => {
+    res.send(await Action.count())
   })
+  
 
-  .get('/search/:q*', async ctx => {
-    const from = ctx.request.query.from
+  .get('/search/:q?', async (req, res) => {
+    const from = req.query.from
     const location = from && from.split(',').map(v => Number(v))
-    const limit = Number(ctx.request.query.limit) || 30
-    const format = ctx.request.query.format || 'json'
-    const criteria = [{$match: searchCriteria(ctx)}, ...aggregateRules]
+    const limit = Number(req.query.limit) || 30
+    const format = req.query.format || 'json'
+    const criteria = [{$match: searchCriteria(req)}, ...aggregateRules] // FIX
 
     let actions = []
 
@@ -55,21 +54,22 @@ router
     switch (format) {
       case 'csv':
         // Need a better implementation
-        apiRenderCsv(ctx, actions)
+        apiRenderCsv(res, actions) // FIX
         break
       default:
-        apiRender(ctx, actions)
+        res.send(actions)
     }
+    res.end()
   })
 
-  .get('/:id', async ctx => {
-    const action = await Action.findOne({ _id: ctx.params.id }).populate('actorId')
+  .get('/:id', async (req, res) => {
+    const action = await Action.findOne({ _id: req.params.id }).populate('actorId')
     action._doc.actor = action.actorId // actorId should be called "actor"!
     delete action._doc.actorId
-    if (ctx.request.query.from) {
-      action.location = ctx.request.query.from
+    if (req.query.from) {
+      action.location = req.query.from
     }
-    apiRender(ctx, action)
+    res.send(action)
   })
 
 module.exports = router

@@ -1,14 +1,11 @@
-const router = require('koa-router')({
-  prefix: '/auth'
-})
+const router = require('express').Router()
 const User = require('../models/user')
-const { apiRender } = require('../utils')
 
 router
-  .post('/signup', async ctx => {
-    const params = ctx.request.body
+  .post('/signup', async (res, req) => {
+    const params = req.body
     if (!params.email || !params.password || !params.name) {
-      return apiRender(ctx, { message: 'Email, password and name required.' }, 400)
+      return res.status(400).send({ message: 'Email, password and name required.' })
     }
 
     const user = new User({
@@ -20,21 +17,21 @@ router
 
     try {
       await user.save()
-      return apiRender(ctx, { message: 'User created.', user: user }, 200)
+      return res.send({ message: 'User created.', user: user })
     } catch (e) {
-      return apiRender(ctx, { message: e.message }, 400)
+      return res.status(400).send({ message: e.message })
     }
   })
 
-  .post('/signin', async ctx => {
-    const params = ctx.request.body
+  .post('/signin', async (res, req) => {
+    const params = req.body
     const message = 'Invalid email or password.'
     const user = await User.findOne({ email: params.email })
     if (!user) {
-      return apiRender(ctx, { message }, 401)
+      return res.status(401).send({ message })
     }
     const match = await user.comparePassword(params.password)
-    return match ? apiRender(ctx, { token: 'JWT - TODO', user }) : apiRender(ctx, { message }, 401)
+    return match ? res.send({ token: 'JWT - TODO', user }) : res.status(401).send({ message })
   })
 
 module.exports = router

@@ -10,7 +10,7 @@ afterAll(() => {
 describe('Test Domains', async () => {
   const domainsUrl = '/domains'
   test(`Get domain list ${domainsUrl}`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .get(domainsUrl)
       .set('Accept', 'application/json')
       .expect(200)
