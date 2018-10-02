@@ -58,8 +58,7 @@ router
         break
       default:
         res.send(actions)
-    }
-    res.end()
+    }    
   })
 
   .get('/:id', async (req, res) => {

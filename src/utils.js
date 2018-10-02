@@ -28,7 +28,7 @@ function apiRenderCsv (res, items) {
     'Content-Type': 'text/csv',
     'Content-disposition': `attachment; filename=export.csv`
   })
-  res.body = stream
+  stream.pipe(res)
   stream.end()
 }
 
