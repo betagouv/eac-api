@@ -27,7 +27,7 @@ router
 
   .get('/count', async (req, res) => {
     const criteria = allowDepartmentsFilter(req)
-    res.send(await School.count(criteria))
+    res.send(`${await School.count(criteria)}`)
   })
 
   .get('/:id', async (req, res) => {

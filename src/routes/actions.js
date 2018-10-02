@@ -27,7 +27,7 @@ router
   })
 
   .get('/count', async (_req, res) => {
-    res.send(await Action.count())
+    res.send(`${await Action.count()}`)
   })
 
   .get('/search/:q?', async (req, res) => {
