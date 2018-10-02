@@ -44,7 +44,6 @@ router
     const from = ctx.request.query.from
     const location = from && from.split(',').map(v => Number(v))
     const limit = Number(ctx.request.query.limit) || 30
-    const format = ctx.request.query.format || 'json'
     const criteria = searchCriteria(ctx)
 
     let actors = []

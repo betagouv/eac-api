@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const { cleanPostalCode, departmentOnSave } = require('../signals')
 const { PostalCode, Department } = require('../schematypes')
 
-
 const SchoolSchema = new mongoose.Schema({
   name: { type: String, required: true },
   city: String,

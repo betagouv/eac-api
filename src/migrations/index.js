@@ -128,10 +128,10 @@ print('Update timetable for all actions with obsolete dateRange...')
 
 const toFrDate = date => {
   date = new Date(date)
-  return `${('0' + date.getDate()).slice(-2)}/${('0' + (date.getMonth()+1)).slice(-2)}/${date.getFullYear()}`
+  return `${('0' + date.getDate()).slice(-2)}/${('0' + (date.getMonth() + 1)).slice(-2)}/${date.getFullYear()}`
 }
 
-db.actions.find({ dateRange: { $ne:null } }).forEach(action => {
+db.actions.find({ dateRange: { $ne: null } }).forEach(action => {
   const dr = action.dateRange
   let text = [ action.timetable ]
   if (dr[0] && dr[1]) {

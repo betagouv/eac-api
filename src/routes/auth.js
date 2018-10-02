@@ -29,7 +29,7 @@ router
   .post('/signin', async ctx => {
     const params = ctx.request.body
     const message = 'Invalid email or password.'
-    user = await User.findOne({ email: params.email })
+    const user = await User.findOne({ email: params.email })
     if (!user) {
       return apiRender(ctx, { message }, 401)
     }

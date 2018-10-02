@@ -3,7 +3,6 @@ const utils = require('../utils')
 const { cleanPostalCode, departmentOnSave } = require('../signals')
 const { PostalCode, Department } = require('../schematypes')
 
-
 function cleanText (t) {
   return (t && t.replace(/\u0092/g, '’')) || ''
 }

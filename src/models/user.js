@@ -6,10 +6,10 @@ const UserSchema = new Schema({
   email: { type: String, unique: true, required: true, trim: true },
   password: { type: String, required: true },
   name: { type: String, required: true, trim: true },
-  roles: [{ type: String, enum: ['admin', 'school', 'actor'], required: true }],
+  roles: [{ type: String, enum: ['admin', 'school', 'actor'], required: true }]
 })
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function (next) {
   if (this.isModified('password') || this.isNew) {
     bcrypt.hash(this.password, 10, (_e, hash) => {
       this.password = hash
@@ -20,7 +20,7 @@ UserSchema.pre('save', function(next) {
   return next()
 })
 
-UserSchema.method('toJSON', function() {
+UserSchema.method('toJSON', function () {
   var user = this.toObject()
   delete user.password
   delete user.__v

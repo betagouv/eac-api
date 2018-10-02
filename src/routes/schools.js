@@ -4,7 +4,6 @@ const { allowDepartmentsFilter } = require('../query')
 
 const School = require('../models/school')
 
-
 router
   .get('/', async (ctx) => {
     const criteria = allowDepartmentsFilter(ctx)
