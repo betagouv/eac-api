@@ -19,28 +19,24 @@ function deg2rad (deg) {
   return deg * (Math.PI / 180)
 }
 
-function apiRender (context, body, status) {
-  context.set('Content-Type', 'application/json')
-  context.response.status = status || 200
-  context.body = JSON.stringify(body)
-}
-
-function apiRenderCsv (context, items) {
+function apiRenderCsv (res, items) {
   const stream = csvWriter()
   items.forEach(item => {
     stream.write(item)
   })
-  context.set('Content-disposition', `attachment; filename=export.csv`)
-  context.statusCode = 200
-  context.body = stream
+  res.writeHead(200, {
+    'Content-Type': 'text/csv',
+    'Content-disposition': `attachment; filename=export.csv`
+  })
+  stream.pipe(res)
   stream.end()
 }
 
-function renderFormat (context, items) {
-  if (context.request.query.format === 'csv') {
-    apiRenderCsv(context, items)
+function renderFormat (req, res, items) {
+  if (req.query.format === 'csv') {
+    apiRenderCsv(res, items)
   } else {
-    apiRender(context, items)
+    res.send(items)
   }
 }
 
@@ -48,11 +44,11 @@ function isLatLngString (s) {
   return s.match(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/)
 }
 
-function searchCriteria (ctx) {
-  const words = ctx.params.q
-  const from = ctx.request.query.from
-  const distance = Number(ctx.request.query.distance) || 100
-  const domains = ctx.request.query.domains && ctx.request.query.domains.split(',')
+function searchCriteria (req) {
+  const words = req.params.q
+  const from = req.query.from
+  const distance = Number(req.query.distance) || 100
+  const domains = req.query.domains && req.query.domains.split(',')
 
   const criteria = !words ? {} : {
     $text: {
@@ -85,7 +81,6 @@ function version (model, objects) {
 
 module.exports = {
   distance,
-  apiRender,
   isLatLngString,
   searchCriteria,
   apiRenderCsv,

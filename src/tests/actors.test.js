@@ -14,7 +14,7 @@ describe('Test actors', async () => {
   let actorId
 
   test(`Create an actor ${actorsUrl}`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .post(actorsUrl)
       .send(params)
       .set('Accept', 'application/json')
@@ -26,7 +26,7 @@ describe('Test actors', async () => {
   })
 
   test(`Get an actor ${actorsUrl}/${actorId}`, async () => {
-    const response = await request(app.callback())
+    const response = await request(app)
       .get(`${actorsUrl}/${actorId}`)
       .set('Accept', 'application/json')
       .expect(200)

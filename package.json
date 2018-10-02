@@ -4,9 +4,8 @@
   "description": "API for EAC project",
   "main": "./src/app.js",
   "scripts": {
-    "start": "DEBUG=koa* nodemon --inspect src/server.js",
-    "debug": "nodemon inspect src/server.js",
-    "test": "export MONGODB_URI=mongodb://localhost:27017/eac-test && node src/tests/seed.js && jest --forceExit"
+    "start": "DEBUG=express:* nodemon --inspect src/server.js",
+    "test": "export MONGODB_URI=mongodb://localhost:27017/eac-test && node src/tests/seed.js && jest"
   },
   "author": "BetaGouv",
   "license": "MIT",
@@ -15,11 +14,10 @@
     "url": "git+https://github.com/betagouv/eac-api.git"
   },
   "dependencies": {
-    "@koa/cors": "^2.2.2",
     "bcrypt": "^3.0.1",
-    "koa": "^2.5.3",
-    "koa-bodyparser": "^4.2.1",
-    "koa-router": "^7.4.0",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
     "mongoose": "^5.3.0",
     "nodemon": "^1.18.4"
   },

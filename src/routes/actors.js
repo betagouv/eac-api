@@ -1,50 +1,48 @@
-const router = require('koa-router')({
-  prefix: '/actors'
-})
-const { apiRender, renderFormat, searchCriteria, version } = require('../utils')
+const router = require('express').Router()
+const { renderFormat, searchCriteria, version } = require('../utils')
 const { allowDepartmentsFilter } = require('../query')
 const Actor = require('../models/actor')
 const Action = require('../models/action')
 
 router
-  .get('/', async ctx => {
-    const criteria = allowDepartmentsFilter(ctx)
-    const actors = await Actor.find(criteria).limit(Number(ctx.request.query.limit) || 30)
-    renderFormat(ctx, actors)
+  .get('/', async (req, res) => {
+    const criteria = allowDepartmentsFilter(req)
+    const actors = await Actor.find(criteria).limit(Number(req.query.limit) || 30)
+    renderFormat(req, res, actors)
   })
 
-  .post('/', async ctx => {
-    await createOrUpdateActor(ctx, x => Actor.create(x))
+  .post('/', async (req, res) => {
+    await createOrUpdateActor(req, res, x => Actor.create(x))
   })
 
-  .put('/:id', async ctx => {
-    await createOrUpdateActor(ctx, async actor => {
-      await version('Actor', await Actor.findByIdAndUpdate(ctx.params.id, actor))
-      return Actor.findById(ctx.params.id)
+  .put('/:id', async (req, res) => {
+    await createOrUpdateActor(req, res, async actor => {
+      await version('Actor', await Actor.findByIdAndUpdate(req.params.id, actor))
+      return Actor.findById(req.params.id)
     })
   })
 
-  .delete('/:id', async ctx => {
+  .delete('/:id', async (req, res) => {
     const actor = await Actor.findOneAndRemove({
-      _id: ctx.params.id
+      _id: req.params.id
     })
     await version('Actor', actor)
-    const actions = await Action.find({ actorId: ctx.params.id })
+    const actions = await Action.find({ actorId: req.params.id })
     await Action.remove({ id: { $in: actions.map(a => a.id) } })
     await version('Action', actions)
-    apiRender(ctx, actor)
+    res.send(actor)
   })
 
-  .get('/count', async ctx => {
-    const criteria = allowDepartmentsFilter(ctx)
-    ctx.body = await Actor.count(criteria)
+  .get('/count', async (req, res) => {
+    const criteria = allowDepartmentsFilter(req)
+    res.send(String(await Actor.countDocuments(criteria)))
   })
 
-  .get('/search/:q*', async ctx => {
-    const from = ctx.request.query.from
+  .get('/search/:q?', async (req, res) => {
+    const from = req.query.from
     const location = from && from.split(',').map(v => Number(v))
-    const limit = Number(ctx.request.query.limit) || 30
-    const criteria = searchCriteria(ctx)
+    const limit = Number(req.query.limit) || 30
+    const criteria = searchCriteria(req)
 
     let actors = []
 
@@ -60,20 +58,20 @@ router
     } else {
       actors = limit === -1 ? await Actor.find(criteria) : await Actor.find(criteria).limit(limit)
     }
-    renderFormat(ctx, actors)
+    renderFormat(req, res, actors)
   })
 
-  .get('/:id', async ctx => {
+  .get('/:id', async (req, res) => {
     const actor = await Actor.findOne({
-      _id: ctx.params.id
+      _id: req.params.id
     })
     actor.actions = await Action.find({actorId: actor._id})
-    actor.location = ctx.request.query.from
-    apiRender(ctx, actor)
+    actor.location = req.query.from
+    res.send(actor)
   })
 
-async function createOrUpdateActor (ctx, callback) {
-  const params = ctx.request.body
+async function createOrUpdateActor (req, res, callback) {
+  const params = req.body
   try {
     const {actions, ...properties} = {...params, ...{updatedAt: new Date(), source: 'eac_website'}}
 
@@ -99,11 +97,11 @@ async function createOrUpdateActor (ctx, callback) {
       }
     }))
 
-    apiRender(ctx, actor)
+    res.send(actor)
   } catch (e) {
-    apiRender(ctx, {
+    res.status(400).send({
       message: e.message
-    }, 400)
+    })
   }
 }
 

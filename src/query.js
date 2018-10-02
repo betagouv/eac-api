@@ -1,6 +1,6 @@
 
-function allowDepartmentsFilter (ctx, criteria = {}) {
-  const departments = ctx.request.query.departments
+function allowDepartmentsFilter (req, criteria = {}) {
+  const departments = req.query.departments
   if (departments) {
     criteria['department'] = { $in: departments.split(',').map(d => d.trim()) }
   }
