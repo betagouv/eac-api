@@ -4,8 +4,7 @@
   "description": "API for EAC project",
   "main": "./src/app.js",
   "scripts": {
-    "start": "nodemon --inspect src/server.js",
-    "debug": "nodemon inspect src/server.js",
+    "start": "DEBUG=express:* nodemon --inspect src/server.js",
     "test": "export MONGODB_URI=mongodb://localhost:27017/eac-test && node src/tests/seed.js && jest"
   },
   "author": "BetaGouv",
