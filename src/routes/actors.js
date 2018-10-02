@@ -35,7 +35,7 @@ router
 
   .get('/count', async (req, res) => {
     const criteria = allowDepartmentsFilter(req)
-    res.send(`${await Actor.countDocuments(criteria)}`)
+    res.send(String(await Actor.countDocuments(criteria)))
   })
 
   .get('/search/:q?', async (req, res) => {
