@@ -28,7 +28,6 @@ router
 
   .post('/signin', async (req, res) => {
     const params = req.body
-    console.log(params)
     if (!params.email || !params.password) {
       return res.status(400).send({ message: 'Email and password required.' })
     }
