@@ -6,7 +6,6 @@ router
   .post('/', async (req, res) => {
     const params = req.body
     const feedback = new Feedback({
-      like: true,
       actionId: params.actionId,
       email: params.email,
       participation: Boolean(params.participation)

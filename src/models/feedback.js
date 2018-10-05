@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const FeedbackSchema = new mongoose.Schema({
   email: { type: String, required: true, trim: true },
   actionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Action', required: true },
-  like: { type: Boolean },
+  like: { type: Boolean, default: true },
   participation: { type: Boolean },
   createdAt: { type: Date, default: Date.now }
 })
