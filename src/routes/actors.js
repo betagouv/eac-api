@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { renderFormat, searchCriteria, version, setDistance } = require('../utils')
+const { renderFormat, searchCriteria, version, distance } = require('../utils')
 const { allowDepartmentsFilter } = require('../query')
 const Actor = require('../models/actor')
 const Action = require('../models/action')
@@ -49,7 +49,7 @@ router
     if (from) {
       actors = await Actor.find(criteria)
       actors.forEach(actor => {
-        setDistance(actor, location)
+        actor.distance = distance(actor.loc.coordinates, location)
       })
       actors.sort((a, b) => a.distance - b.distance)
       if (limit !== -1) {
@@ -66,7 +66,7 @@ router
       _id: req.params.id
     })
     actor.actions = await Action.find({actorId: actor._id})
-    setDistance(actor, req.query.from)
+    actor.distance = distance(actor.loc.coordinates, req.query.from)
     res.send(actor)
   })
 
