@@ -12,7 +12,7 @@ router
     })
     try {
       await feedback.save()
-      return res.send({ message: 'Feedback created.', feedback: feedback })
+      return res.send({ message: 'Feedback created.', feedback })
     } catch (e) {
       return res.status(400).send({ message: e.message })
     }
