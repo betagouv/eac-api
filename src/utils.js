@@ -79,6 +79,12 @@ function version (model, objects) {
   }))
 }
 
+function setDistance (resource, latLng) {
+  if (!resource.loc.coordinates[0]) return
+  if (typeof (latLng) === 'string') latLng = latLng.split(',').map(v => Number(v))
+  resource.distance = distance(latLng, resource.loc.coordinates)
+}
+
 module.exports = {
   distance,
   isLatLngString,
@@ -86,5 +92,6 @@ module.exports = {
   apiRenderCsv,
   version,
   departmentFromPostalCode,
-  renderFormat
+  renderFormat,
+  setDistance
 }
