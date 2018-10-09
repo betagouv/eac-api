@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const utils = require('../utils')
 const { cleanPostalCode, departmentOnSave } = require('../signals')
 const { PostalCode, Department } = require('../schematypes')
 
@@ -28,11 +27,6 @@ cleanPostalCode(ActorSchema)
 departmentOnSave(ActorSchema)
 
 class Actor {
-  set location (latLng) {
-    if (!this.loc.coordinates[0]) return
-    if (typeof (latLng) === 'string') latLng = latLng.split(',').map(v => Number(v))
-    this.distance = utils.distance(latLng, this.loc.coordinates)
-  }
   toCsv () {
     const actor = this._doc
     actor.location = actor.loc && actor.loc.coordinates.join(',')

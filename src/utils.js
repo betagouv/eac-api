@@ -3,8 +3,9 @@ const Version = require('./models/version')
 const { departmentFromPostalCode } = require('./mongoutils')
 
 function distance (latlng1 = [], latlng2 = []) {
-  const [lat1, lng1] = latlng1
-  const [lat2, lng2] = latlng2
+  if (!latlng1[0] || !latlng2[0]) return
+  const [lat1, lng1] = (typeof (latlng1) === 'string') ? latlng1.split(',').map(v => Number(v)) : latlng1
+  const [lat2, lng2] = (typeof (latlng2) === 'string') ? latlng2.split(',').map(v => Number(v)) : latlng2
   const R = 6371 // Radius of the earth in km
   const dLat = deg2rad(lat2 - lat1) // deg2rad below
   const dLon = deg2rad(lng2 - lng1)

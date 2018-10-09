@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {apiRenderCsv, searchCriteria} = require('../utils')
+const {apiRenderCsv, searchCriteria, distance} = require('../utils')
 
 const Action = require('../models/action')
 
@@ -42,7 +42,7 @@ router
     if (from) {
       actions = await Action.aggregate(criteria)
       actions.forEach(action => {
-        action.location = location
+        action.distance = distance(action.loc.coordinates, location)
       })
       actions.sort((a, b) => a.distance - b.distance)
       actions = actions.splice(0, limit)
@@ -65,7 +65,7 @@ router
     action._doc.actor = action.actorId // actorId should be called "actor"!
     delete action._doc.actorId
     if (req.query.from) {
-      action.location = req.query.from
+      action.distance = distance(action.loc.coordinates, req.query.from)
     }
     res.send(action)
   })
