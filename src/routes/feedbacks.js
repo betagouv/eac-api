@@ -19,8 +19,9 @@ router
   })
 
   // Get all feedbacks.
-  .get('/', async (_req, res) => {
-    res.send(await Feedback.find({}))
+  .get('/', async (req, res) => {
+    const actionId = req.query.action
+    res.send(await Feedback.find(actionId ? { actionId } : {}))
   })
 
 module.exports = router
