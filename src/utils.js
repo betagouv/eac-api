@@ -22,7 +22,7 @@ function deg2rad (deg) {
 
 function apiRenderCsv (res, items) {
   const stream = csvWriter()
-  items.forEach(item => {
+  items.map(item => item.toCsv ? item.toCsv() : item).forEach(item => {
     stream.write(item)
   })
   res.writeHead(200, {
