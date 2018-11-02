@@ -14,13 +14,13 @@
     "url": "git+https://github.com/betagouv/eac-api.git"
   },
   "dependencies": {
-    "bcrypt": "^3.0.1",
+    "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.3.0",
-    "nodemon": "^1.18.4",
+    "mongoose": "^5.3.8",
+    "nodemon": "^1.18.5",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0"
   },
@@ -32,7 +32,8 @@
     "get-stream": "^3.0.0",
     "iconv-lite": "^0.4.24",
     "jest": "^23.6.0",
-    "mongodb": "^3.1.6",
+    "merge": "^1.2.1",
+    "mongodb": "^3.1.8",
     "proj4": "^2.5.0",
     "request": "^2.88.0",
     "supertest": "^3.3.0",
