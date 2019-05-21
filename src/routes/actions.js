@@ -1,6 +1,5 @@
 const router = require('express').Router()
 const {apiRenderCsv, searchCriteria, distance} = require('../utils')
-
 const Action = require('../models/action')
 
 const aggregateRules = [
@@ -35,7 +34,18 @@ router
     const location = from && from.split(',').map(v => Number(v))
     const limit = Number(req.query.limit) || 30
     const format = req.query.format || 'json'
-    const criteria = [{$match: searchCriteria(req)}, ...aggregateRules]
+    const domains = req.query.domains && req.query.domains.split(',')
+    const schoolLevels = req.query.schoolLevels && req.query.schoolLevels.split(',')
+    let criteria = searchCriteria(req)
+    if (schoolLevels) {
+      criteria.schoolLevels = { $in: schoolLevels }
+    }
+    if (domains) {
+      criteria = [{$match: criteria}, ...aggregateRules,{$match: {"actor.domains": { $in: domains } } }]
+    } else {
+      criteria = [{$match: criteria}, ...aggregateRules]
+    }
+    
 
     let actions = []
 

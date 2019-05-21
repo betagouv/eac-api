@@ -19,5 +19,6 @@ app.use('/domains', require('./routes/domains'))
 app.use('/schools', require('./routes/schools'))
 app.use('/auth', require('./routes/auth'))
 app.use('/feedbacks', require('./routes/feedbacks'))
+app.use('/schoolLevels', require('./routes/schoolLevels'))
 
 module.exports = app
