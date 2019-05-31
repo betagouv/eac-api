@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const {ObjectId} = require('mongodb');
 const { renderFormat, searchCriteria, version, distance } = require('../utils')
 const { allowDepartmentsFilter } = require('../query')
 const Actor = require('../models/actor')
@@ -42,7 +43,16 @@ router
     const from = req.query.from
     const location = from && from.split(',').map(v => Number(v))
     const limit = Number(req.query.limit) || 30
-    const criteria = searchCriteria(req)
+    const domains = req.query.domains && req.query.domains.split(',')
+    const schoolLevels = req.query.schoolLevels && req.query.schoolLevels.split(',')
+    let criteria = searchCriteria(req)
+    if (domains) {
+      criteria.domains = { $in: domains }
+    }
+    if (schoolLevels) {
+      const actions = await Action.find({schoolLevels: { $in: schoolLevels }})
+      criteria._id = {$in: actions.map(e => ObjectId(e.actorId[0])) }
+    }
 
     let actors = []
 

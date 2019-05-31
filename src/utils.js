@@ -49,7 +49,6 @@ function searchCriteria (req) {
   const words = req.params.q
   const from = req.query.from
   const distance = Number(req.query.distance) || 100
-  const domains = req.query.domains && req.query.domains.split(',')
 
   const criteria = !words ? {} : {
     $text: {
@@ -57,11 +56,6 @@ function searchCriteria (req) {
     }
   }
 
-  if (domains) {
-    criteria.domains = {
-      $in: domains
-    }
-  }
 
   if (from) {
     const location = from.split(',').map(v => Number(v))
