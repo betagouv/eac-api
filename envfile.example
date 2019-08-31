@@ -1,0 +1,4 @@
+MONGODB_URI=mongodb://username:password@localhost:27017/eacdb
+ENABLE_METRICS=false
+PORT=8081
+SECRET=thisisverysecret

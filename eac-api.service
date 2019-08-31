@@ -1,0 +1,21 @@
+[Unit]
+Description=EAC API server
+After=network.target
+
+[Service]
+ExecStart=node --experimental-modules /home/eac/api/src/server.js
+# Required on some systems
+WorkingDirectory=/home/eac/api/src
+Restart=always
+RestartSec=3
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=eac-api
+#User=<alternate user>
+#Group=<alternate group>
+Environment=NODE_ENV=production PORT=8080
+
+[Install]
+WantedBy=multi-user.target
+
